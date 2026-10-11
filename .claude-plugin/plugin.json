@@ -1,8 +1,15 @@
 {
   "name": "chat-handoff",
   "description": "Carry a chat's work into a new chat, or fold side chats into a master chat after review.",
-  "version": "0.1.0",
-  "author": { "name": "RosBradley" },
+  "version": "0.2.0",
+  "author": {
+    "name": "RosBradley"
+  },
   "license": "MIT",
-  "keywords": ["handoff", "context", "chats", "skill"]
+  "keywords": [
+    "handoff",
+    "context",
+    "chats",
+    "skill"
+  ]
 }

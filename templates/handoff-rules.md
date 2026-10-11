@@ -4,39 +4,52 @@ Rules for chat handoffs in this project, read by the chat-handoff skill.
 
 Save this file as `claude/Handoff rules.md` in a claude.ai Project, or as `handoffs/Handoff rules.md` in a folder. Replace each example with your own, and delete any section you don't need: the skill's defaults fill the gap.
 
-The examples are for a product launch planned across several chats (pricing, ads, website), with one master chat, "plan", that keeps the launch plan.
+The examples come from a market expansion report for Sablewire Grid Solutions, a made-up firm that does IT/OT engineering, NERC CIP compliance and OT cybersecurity for electric utilities. Four research chats fold into a report chat, and the report folds into a fresh review chat. The full walkthrough is in [examples/README.md](../examples/README.md).
 
-## Master chat
-*The chat that receives fold-ins, and any files only it may write.*
+## Fold-ins
+*Which lines fold into which, and any files only one chat may write.*
 
-plan: the chat that keeps the launch plan. It is the only chat that writes `claude/Launch plan.md`.
+- market size, regulations, competitors, interviews → report
+- report → review
+
+Only report writes `claude/Expansion report draft.md`. Only review writes `claude/Expansion report final.md`.
 
 ## Where approved items go
-*The file approved items are added to, and the format they take there.*
+*For each receiving line: the file approved items go into, and the format they take there.*
 
-`claude/Launch plan.md`, under "Pending changes", one line per item with its date and source chat. Re-read the file right before saving.
+- report: `claude/Expansion report draft.md`, in the section the item belongs to, with its source and the date it was folded in.
+- review: `claude/Expansion report final.md`, section by section as approved, with any change noted at the end of the section.
+
+Re-read the file right before saving.
 
 ## Review checks
-*What the master checks on every incoming item.*
+*What the receiving chat checks on every incoming item.*
 
-- Every cost against the approved budget in the launch plan.
-- Every date against the launch calendar.
-- Every task has a named owner.
-- Every figure from outside research has a source link.
+- Every market figure has a source, a year and a currency (US dollars, at the exchange rates in the report's notes).
+- Market sizes for IT/OT engineering, compliance and cybersecurity are not added together where they overlap.
+- Every regulatory claim names the regulation and the country or province.
+- Every finding from interviews says how many interviews back it.
 
 ## Deep review triggers
-*What counts as high-stakes, so the master gives it a second, harder pass before you discuss it.*
+*What counts as high-stakes, so the receiving chat gives it a second, harder pass before you discuss it.*
 
-- The total budget moves by more than 10%.
-- The launch date moves.
-- Anything public-facing or legal: pricing, claims in ads, terms of service.
+- Any headline market number: a country's total, or the total across countries.
+- A recommendation to enter, or stay out of, a country.
+- Anything that commits money: an office, hires, a partner.
 
 ## Chat titles
-*The naming convention for open and finished chats.*
+*The title for each state. These are the skill's defaults: change the words, or delete this section to keep them.*
 
-"Open - <name> N" while open; "Done - <name> N" when finished.
+- Working: "<name> N"
+- Master: "Master - <name> N"
+- Waiting for the master: "Handed off - <name> N"
+- Moved on to a new chat: "Continued - <name> N"
+- Work sent back: "Returned - <name> N"
+- Folded into the master: "Folded - <name> N"
+- Work went out: "Released - <name> N"
 
 ## Never
 *Work no handoff may start without being asked.*
 
-- Send emails or post anything publicly.
+- Contact prospects, partners or regulators.
+- Copy interview notes outside the project: they name people at customer utilities.
