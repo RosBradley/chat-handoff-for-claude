@@ -1,0 +1,14 @@
+{
+  "name": "chat-handoff-for-claude",
+  "description": "Chat handoff skill for Claude: carry work between chats.",
+  "owner": {
+    "name": "RosBradley"
+  },
+  "plugins": [
+    {
+      "name": "chat-handoff",
+      "source": "./",
+      "description": "Carry a chat's work into a new chat, or fold side chats into a master chat after review."
+    }
+  ]
+}

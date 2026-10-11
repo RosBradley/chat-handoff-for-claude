@@ -25,7 +25,7 @@ plan: the chat that keeps the launch plan. It is the only chat that writes `clau
 - Every figure from outside research has a source link.
 
 ## Deep review triggers
-*What counts as high-stakes, so an independent agent checks it before you discuss it.*
+*What counts as high-stakes, so the master gives it a second, harder pass before you discuss it.*
 
 - The total budget moves by more than 10%.
 - The launch date moves.
