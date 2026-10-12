@@ -1,7 +1,7 @@
 {
   "name": "chat-handoff",
-  "description": "Carry a chat's work into a new chat, or fold side chats into a master chat after review.",
-  "version": "0.2.0",
+  "description": "Carry a chat's work into a new chat, or review a side chat's work item by item and fold what you approve into a master chat.",
+  "version": "0.3.0",
   "author": {
     "name": "RosBradley"
   },

@@ -1,11 +1,33 @@
 ---
 name: chat-handoff
-description: "Carries a chat's work into a new chat, or folds a side chat's work into a master chat after review. Use when the user's message is a handoff command, in any case: handoff (with or without a name), handoff?, pickup (with or without a chat name), fold (with a chat name), handoffs, or the dot-prefixed forms .push, .push?, .pull, .merge and .status. Also when the user plainly asks to hand off, pick up or fold in a chat's work. Not when these words appear inside an ordinary sentence, such as picking up the kids or a handoff to another team."
+description: "Carries a chat's work into a new chat, or reviews a side chat's work item by item and folds what the user approves into a master chat. Use when the user's message is a handoff command, in any case: handoff (with or without a name), handoff?, pickup (with or without a chat name), fold (with a chat name), handoffs, or the dot-prefixed forms .push, .push?, .pull, .merge and .status. Also when the user plainly asks to hand off, pick up or fold in a chat's work. Not when these words appear inside an ordinary sentence, such as picking up the kids or a handoff to another team."
 ---
 
-# Chat handoff
+# Chat Handoff
 
-Long chats get slow and use up limits faster. This skill lets the user end a chat and carry its work into a fresh one, or fold a side chat's work into a master chat after a review.
+## Why
+
+Claude re-reads the entire chat every time the user sends a message. So the longer a chat runs, the more each new message costs, even a one-line "thanks":
+
+- **Usage and dollars.** On a Claude plan, usage limits are based on the length of the whole chat, not just the number of messages, so a long chat uses up the limit faster. On the API, the full history is sent, and billed, with every request.
+- **Speed.** Claude answers shorter chats faster.
+- **Detail.** Near a chat's length limit, the app either summarizes older messages on its own, choosing what to keep, or stops the chat.
+
+Starting a fresh chat avoids all three, but normally means explaining the work all over again.
+
+## What Chat Handoff does
+
+This skill doesn't move or copy a chat. It lets the user pick up the conversation in a new chat, or fold a side chat's work into a main one, with short commands (all detailed below):
+
+- **`handoff`**: this skill writes a short handoff file, about 400 words: where the work stands, what was decided, what is still open, the next step, and what not to redo.
+- **`pickup <name>`**, as the first message of a new chat: this skill reads the handoff file, and only the files it points to, and the new chat carries on from there.
+- **`fold <name>`**, in a main (master) chat that side chats feed into: this skill reviews the side chat's handed-off work as an independent second reviewer. It rechecks the figures against the current sources, looks for gaps and for conflicts with what is already settled, and gives each item a verdict (keep, change, toss, or return to the side chat for more work). Nothing is folded in until the user approves.
+
+Each command has a dot-style twin for users who think in git terms (`.push`, `.pull`, `.merge`).
+
+**How it saves.** A chat picked up from a handoff carries the handoff and the files it opens, not the old chat's back-and-forth, so each message costs far less. For example, once a chat has grown to 150,000 tokens, every message makes Claude re-read all 150,000; the new chat starts from a 400-word handoff instead. Side chats do the same for a main chat: the heavy work happens elsewhere, and only the reviewed results come back. And what carries forward is a deliberate handoff (decisions, open items, next step, what not to redo), not an automatic summary.
+
+This skill also suggests a title for each chat as its state changes, in the words of the commands the user types (`handedoff.budget.3` after `handoff`, `pushed.budget.3` after `.push`). Renaming is optional.
 
 ## Commands
 
@@ -13,17 +35,17 @@ Two sets of words do the same things; the user can use either.
 
 | Plain words | Dot style | What happens |
 |---|---|---|
-| `handoff` | `.push` | Save this chat's handoff file. If the chat has no line name yet, ask for one first, with a suggestion |
-| `handoff <name>` | `.push <name>` | Save it under that name. A name different from this chat's line renames it (see "Renaming") |
-| `handoff?` | `.push?` | One line: is this a good time to hand off? |
-| `pickup <name>` | `.pull <name>` | Continue that chat's work in this chat (normally the first message of a new chat) |
-| `fold <name>` | `.merge <name>` | Review that chat's work and fold it into this chat, the master, once the user decides |
-| `pickup` | `.pull` | In a chat with work returned to it: start on the returns. Anywhere else: list what is waiting and ask |
-| `handoffs` | `.status` | List every handoff and its status |
+| `handoff` | `.push` | Saves this chat's handoff file. If the chat has no name yet, asks for one first, with a suggestion |
+| `handoff <name>` | `.push <name>` | Saves it under that name, for example `handoff budget.3` (see "Names"). A different line renames it (see "Renaming") |
+| `handoff?` | `.push?` | Answers in one line: is this a good time to hand off? |
+| `pickup <name>` | `.pull <name>` | Continues that chat's work in this chat (normally the first message of a new chat) |
+| `fold <name>` | `.merge <name>` | Reviews that chat's work item by item, gives each item a verdict, and folds what the user approves into this chat, the master |
+| `pickup` | `.pull` | In a chat with work returned to it: starts on the returns. Anywhere else: lists what is waiting and asks |
+| `handoffs` | `.status` | Lists every handoff and its status |
 
-- A command is the user's whole message, or nearly (`handoff please`, `fold budget`), and case doesn't matter: `.Push` and `Handoff` count. A plain request ("let's hand this off") counts too. Inside an ordinary sentence these are ordinary words: carry on without this skill.
+- A command is the user's whole message, or nearly (`handoff please`, `fold budget`), and case doesn't matter: `.Push` and `Handoff` count. A plain request ("let's hand this off") counts too, as plain words. Inside an ordinary sentence these are ordinary words: carry on without this skill.
 - The dot-style words always carry the dot, so they're never mistaken for git commands: `.push` is a handoff, `push` alone is not.
-- When telling the user what to type next, use the style they just used.
+- Follow the user's habit: when telling the user what to type next, or suggesting a chat title, use the style of the command they just typed (see "Chat titles").
 
 Replies stay short, bottom line first.
 
@@ -37,29 +59,32 @@ Replies stay short, bottom line first.
 
 Several chats may run at once, so a chat writes only its own line's file. The one exception: a master marking items, setting the status or writing a receipt in a file it is folding in.
 
-**The line** is the chat's working name: one or two words, without any status word or chat number (for example "research", "budget"). Take it from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. Otherwise, the first time a command needs it, ask once, in one line, with a short name drawn from the chat's topic ("Name this line 'budget'? Reply yes or give another."), and use the answer. Never pick a name silently. Names match loosely, so one distinctive word finds the file later.
+**Names.** A chat's name is its line and its number, joined by a dot: `budget.3` is the third chat on the budget line.
 
-**Renaming.** `handoff <name>` with a name other than this chat's line is a rename, and no trace of the old name stays behind:
+- The line is the working name: one word of letters, digits or hyphens, with no spaces or dots (for example `research`, `budget`, `tax-harvest`). One file per line, `Handoff - <line>.md`, serves every chat on that line.
+- The number counts the chats on the line. The first is 1; a chat started by `pickup` takes the next number after the chat it continues. Read a name by splitting it at its last dot.
+- Take the name from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. If the user gives only the line (`handoff budget`), take the number from the line's file, whose status names the chat now continuing the line; if the file doesn't settle it, ask once, in one line ("Is this budget.3? Reply yes or give the number."). If the chat has no name at all, the first time a command needs one, ask once, in one line, with a short line drawn from the chat's topic ("Use budget.1 as this chat's handoff name? Reply yes or give another."), and use the answer. Never pick a name silently: Claude can't see chat titles, so the number comes from the user or the file, never a guess.
+- Names match loosely: `pickup budget`, `pickup budget.3` and one distinctive word all find the line's file.
 
-1. Save the file under the new name, with its `# Handoff:` line changed to match.
+**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different number on the same line is not a rename: it only corrects this chat's number.
+
+1. Save the file under the new line, with its `# Handoff:` line changed to match.
 2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first.
-3. Say so in the reply: "Renamed from <old> to <new>", with the chat's new title.
+3. Say so in the reply: "Renamed from <old> to <new>", with the chat's new title, marked optional.
 
-Rename only this chat's own line. If the old file's status shows another chat already has it (`continuing in` or `folded into`), ask first, since that chat knows it by the old name. Without a file store, an earlier post can't be removed, so the new post's heading adds "(renamed from <old>)".
+Rename only this chat's own line. If the old file's status shows another chat already has it (`continuing in`, `folded into` or `merged into`), ask first, since that chat knows it by the old name. Without a file store, an earlier post can't be removed, so the new post's heading adds "(renamed from <old>)".
 
-**Chat titles.** Claude can't see or rename chats, so work out each title and tell the user what to rename a chat to whenever its state changes. The status word comes first, so it still shows when the sidebar cuts a long title off. Use the rules file's titles if it sets them; otherwise:
+**Chat titles.** Claude can't see or rename chats. Whenever a chat's state changes, suggest the title the user can rename it to, and say it's optional ("Optional: rename this chat handedoff.budget.3."). Commands find handoffs by file name, never by chat title, so everything works the same whether or not a chat is renamed.
 
-| Title | The chat is | Given by |
-|---|---|---|
-| `<line> N` | Working | `pickup` when it continues; the master, when a side chat's topic stays open |
-| `Master - <line> N` | The master | The master, the first time it folds something in |
-| `Handed off - <line> N` | Waiting for the master | `handoff`, when folding in |
-| `Continued - <line> N` | Moved on to `<line> N+1` | `handoff` when continuing, and `pickup` in the new chat |
-| `Returned - <line> N` | Has work sent back to it | The master |
-| `Folded - <line> N` | Finished, folded into the master | The master |
-| `Released - <line> N` | Finished: its work went out | The last master in a chain, once everything is settled |
+A title is a state word, a dot and the chat's name. The state word comes first, so it still shows when the sidebar cuts a long title off, and, as long as the user sticks to one command style, a search for it (`folded.`, say) finds every chat in that state. Where a state is named after a command, its word follows the style of the command just typed; the other states use the same word in both styles. Use the rules file's titles if it sets them; otherwise:
 
-The first chat on a line is 1. A chat started by `pickup` takes the next number after the chat it continues, and a master's next chat keeps the `Master` prefix.
+| The chat is | After plain words | After dot style | Suggested by |
+|---|---|---|---|
+| Working, a master included | `todo.<line>.N` | `todo.<line>.N` | `handoff` and `pickup`, for the next chat; the master, when a side chat's topic stays open |
+| Handed off: its work continues in `<line>.N+1`, or waits for the master | `handedoff.<line>.N` | `pushed.<line>.N` | `handoff`, for this chat; `pickup`, for the old chat |
+| Has work sent back to it | `returned.<line>.N` | `returned.<line>.N` | The master's fold |
+| Finished, folded into the master | `folded.<line>.N` | `merged.<line>.N` | The master's fold |
+| Finished: its work went out, nothing handed on | `done.<line>.N` | `done.<line>.N` | The last chat in a chain, once everything is settled |
 
 **Item letters.** Items to fold in are lettered A, B, C. A letter belongs to one item for the life of a line: a reworked item keeps its letter, and new items continue after the highest letter already used (in the items, the "Don't redo" list or the receipt). Never reuse a letter.
 
@@ -67,9 +92,9 @@ Big work products (proposal lists, analyses, specs) stay in their own files. The
 
 ### Without a file store
 
-A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <line>, <date>`.
+A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <line>.<N>, <date>`.
 
-`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the latest date, or, on the same date, the one from the more recent chat. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
+`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the highest number, or, on the same number, the latest date. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
 
 ## The rules file (optional, one per project)
 
@@ -86,16 +111,16 @@ What the master checks on every incoming item.
 ## Deep review triggers
 What counts as high-stakes in this project.
 ## Chat titles
-The title for each state, if not the defaults.
+The title for each state, if not the defaults (for example, one set of words for both command styles).
 ## Never
 Work no handoff may start.
 ```
 
-**Defaults:** any chat already underway can be the master; approved items go into that chat's own working files or open list; deep review covers anything high-stakes or hard to reverse; chats are titled as in the table above.
+**Defaults:** any chat already underway can be the master; approved items go into that chat's own working files or open list; deep review covers anything high-stakes or hard to reverse; titles are suggested as in the table above.
 
 ## `handoff` (`.push`)
 
-1. Settle the line (see "The line" and "Renaming"). Read the rules file, and the line's current file if one exists. From it, carry forward:
+1. Settle the name (see "Names" and "Renaming"). Read the rules file, and the line's current file if one exists. From it, carry forward:
    - items not yet settled, with their letters (a reworked item drops its Returned mark);
    - every tossed or rejected item, into "Don't redo" with its reason, so it doesn't come back;
    - settled items as one "Don't redo" line, for example "A changed and B kept, into the report draft, September 12, 2026".
@@ -103,8 +128,8 @@ Work no handoff may start.
 
 ```
 # Handoff: <line>
-Status: waiting for pickup
-From: <this chat's title>, <date>
+Status: waiting
+From: <line>.<N>, <date>
 Built on: <the files this work rests on, with versions and dates>
 
 ## Where it stands
@@ -132,7 +157,7 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
 3. Leave out background, history and reasoning already recorded in project files or memory.
 4. **Cold read.** Before saving, read the draft as a fresh chat would, with only this file and its "Read first" files. Could it take the next step without asking anything? If not, add what's missing, within the length limit.
 5. Save it. In a Project, `project_write` overwrites the line's file, with `present_to_user: true`. For a rename, delete the old file now (see "Renaming").
-6. Tell the user, in four lines or fewer: saved (and renamed from what, if it was a rename); what to type next, in the style they used (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the titles. If continuing, name the new chat `<line> N+1` and rename this one `Continued - <line> N`. If folding in, rename this one `Handed off - <line> N`.
+6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handedoff.<line>.N` (`pushed.<line>.N` after `.push`), and, if continuing, the new chat `todo.<line>.N+1`. For example: "Optional: rename this chat handedoff.budget.3, and title the new one todo.budget.4."
 
 ## `handoff?` (`.push?`)
 
@@ -140,7 +165,7 @@ One line. **Yes** when the chat is at a stopping point (a deliverable finished, 
 
 ## Finding a handoff by name
 
-For `pickup <name>`, `fold <name>` and their dot forms: match the name loosely against handoff file names (without a file store, against past-chat search); one distinctive word is enough. If two match, ask which. If no handoff file matches but another file clearly holds handed-off work (one written before this skill, for example), use it as the handoff and treat its proposals as the items. If the status says the line is already continuing in another chat, say so and ask before taking it over.
+For `pickup <name>`, `fold <name>` and their dot forms: match the name's line loosely against handoff file names (without a file store, against past-chat search); one distinctive word is enough, and a number after the dot only confirms which chat handed off. If two match, ask which. If no handoff file matches but another file clearly holds handed-off work (one written before this skill, for example), use it as the handoff and treat its proposals as the items. If the status says the line is already continuing in another chat, say so and ask before taking it over.
 
 `pickup <name>` always continues and `fold <name>` always folds in; never guess between them.
 
@@ -152,12 +177,12 @@ For `pickup <name>`, `fold <name>` and their dot forms: match the name loosely a
 
 1. Read the handoff and its "Read first" files. Don't read the old chat unless something needed is missing.
 2. If newer versions of the "Built on" files exist, say so.
-3. Set the status to `continuing in <this chat's title>, <date>`.
-4. Reply in five lines or fewer: what is picked up, anything stale, the titles (this chat `<line> N+1`; the old one `Continued - <line> N`, if not renamed already), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
+3. This chat is `<line>.<N+1>`, where N is the number on the file's "From" line. If that line shows no number in this form (an older file), use the chat number it does show, or ask. Set the status to `continuing in <line>.<N+1>, <date>`.
+4. Reply in five lines or fewer: what is picked up, anything stale, the optional titles, worded for the user since Claude can't see which chats are renamed ("Optional: title this chat todo.budget.4; if you haven't already, rename the old one handedoff.budget.3", or `pushed` after `.pull`), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
 
 ## Fold in: `fold <name>` (`.merge <name>`)
 
-This chat is the master: a second set of eyes on work it did not build. The side chat's conclusions are claims to test, not facts. Scrutinize; don't rubber-stamp.
+This chat is the master, and the skill is its reviewer: a second set of eyes on work this chat did not build. The side chat's conclusions are claims to test, not facts. Scrutinize; don't rubber-stamp. The user's part is the decision (step 4).
 
 1. **Read** the handoff and the files it points to. Review only items without a verdict mark; marked items are already settled.
 2. **Review every unmarked item:** check numbers against the current sources and rerun the math where figures matter; look for conflicts with settled decisions or other parts of the work; flag anything missing, or stale against "Built on"; apply the rules file's review checks.
@@ -173,25 +198,23 @@ D. EU: $600M a year (Market sizing v3, section 5). Tossed, September 12, 2026: B
 ```
 
 7. **Open items:** small ones join this chat's open list.
-8. **Set the side chat's status:**
-   - Any item returned: `Status: returned from <this chat's title>, <date>`. Tell the user to rename the side chat `Returned - <line> N` and type `pickup` in it, or `pickup <line>` as the first message of a new chat.
-   - Nothing returned, but a whole topic still open: `Status: continuing in <side chat's title>, <date>`. The side chat goes back to `<line> N`.
-   - Everything settled: cut the file down to a receipt, and tell the user to rename the side chat `Folded - <line> N`. Tossed items stay in the receipt with their reason, so they don't come back.
+8. **Set the side chat's status, and suggest its optional title** in the style of the fold command just typed:
+   - Any item returned: `Status: returned from <this chat's name>, <date>`. Suggest the title `returned.<line>.N`, and tell the user to type `pickup` (`.pull`) in that chat, or `pickup <line>` (`.pull <line>`) as the first message of a new chat.
+   - Nothing returned, but a whole topic still open: `Status: continuing in <side chat's name>, <date>`. Suggest the side chat goes back to `todo.<line>.N`.
+   - Everything settled: cut the file down to a receipt, with `Status: folded into` (`merged into` after `.merge`), and suggest the title `folded.<line>.N` (`merged.<line>.N` after `.merge`). Tossed items stay in the receipt with their reason, so they don't come back.
 
 ```
 # Handoff: <line>
-Status: folded into <master chat's title>, <date>
+Status: folded into <this chat's name>, <date>
 Kept: A, B, D (to <where>). Changed: C (<how>). Tossed: I (<why>).
 ```
 
-   The first time this chat folds something in, also tell the user to rename it `Master - <line> N`.
-
-9. **Released:** if this chat folds into no other line (per the rules file, or because the user says it's the end) and nothing is waiting, returned or open, say the work is complete and where it is. Tell the user to rename this chat `Released - <line> N` once it goes out. If this line has a handoff file, set its status to `released, <date>`.
+9. **Done:** if this chat folds into no other line (per the rules file, or because the user says it's the end) and nothing is waiting, returned or open, say the work is complete and where it is, and suggest the optional title `done.<line>.N` for this chat once the work goes out. If this line has a handoff file, set its status to `done, <date>`.
 
 ## `pickup` with no name (`.pull`)
 
-If this chat's line has a file with status `returned`, start on the items marked Returned. Rework each under its own letter. When they are done, `handoff` again so the master can fold them in. Otherwise list the handoffs waiting for pickup and ask which.
+If this chat's line has a file with status `returned`, start on the items marked Returned. Rework each under its own letter. When they are done, `handoff` again so the master can fold them in. Otherwise list the handoffs whose status is `waiting` (in older files, `waiting for pickup`), and ask which.
 
 ## `handoffs` (`.status`)
 
-List each handoff file (not the rules file): line, status, date, and one line on what it holds. Build the list from the handoff files themselves (without a file store, from the newest post for each line). Never keep a shared tracker file: several chats would overwrite it.
+List each handoff file (not the rules file): line, the latest chat's name, status, date, and one line on what it holds. Build the list from the handoff files themselves (without a file store, from the newest post for each line). Never keep a shared tracker file: several chats would overwrite it.

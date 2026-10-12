@@ -1,6 +1,20 @@
 # Changelog
 
-## 0.2.0 (in testing)
+## 0.3.0 (in testing)
+
+- New opening, in the skill and the README: why long chats cost more (Claude re-reads the whole chat with every message, so usage limits, API cost and speed all suffer, and near the length limit the app summarizes older messages or stops the chat), what the skill does (it doesn't move or copy a chat), and how it saves.
+- Named Chat Handoff; the skill's ID stays `chat-handoff`. The docs say "the skill" wherever the skill does the work, and "Claude" only for what Claude itself does or can't do.
+- Chats are named by line and number: `budget.3` is the third chat on the budget line. A line is one word (letters, digits or hyphens). The number comes from the command or the handoff file, never a guess; `handoff budget` takes it from the file.
+- Titles start with a state word and follow the commands you use: `todo`, `handedoff` (`pushed` after dot-style commands), `returned`, `folded` (`merged` after `.merge`) and `done`. Every title is offered as optional. `Continued -` and `Handed off -` both become `handedoff`; `Returned -`, `Folded -` and `Released -` become `returned`, `folded` and `done`; `Master -` is dropped, since a master is simply `todo` while it works.
+- A new handoff's status is `waiting` (older files saying `waiting for pickup` still work). Receipts say `folded into` or `merged into`, matching the fold command, and the end of a chain is `done` (was `released`).
+- The "From" line carries the chat's name (`From: budget.3`). Without a Project or folder, posts are headed `HANDOFF: budget.3, <date>`, and the newest is the one with the highest number.
+- Only a different line renames: `handoff budget.4` in `budget.3` just corrects the chat's number.
+- `handoffs` shows each line's latest chat.
+- The skill and plugin descriptions say the skill reviews a side chat's work item by item and folds in what the user approves.
+- The rules template and the worked example use the new names and titles (`market-size.2`, `folded.market-size.2`).
+- Upgrading from 0.2.0: older handoff files still work. A line named with two words (`Handoff - market size.md`) can move to one word with `handoff market-size` in its chat, which saves the new file and deletes the old one.
+
+## 0.2.0 (October 10, 2026)
 
 - Installs as a Claude Code plugin; the repo is its own plugin marketplace.
 - Deep review is now a second, harder pass by the master chat itself: figures worked out again from the sources, the strongest case against, what breaks if it's wrong. No separate agent.

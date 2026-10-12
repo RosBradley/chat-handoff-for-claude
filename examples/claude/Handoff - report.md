@@ -1,10 +1,10 @@
 # Handoff: report
-Status: waiting for pickup
-From: Master - report 1, September 25, 2026
+Status: waiting
+From: report.1, September 25, 2026
 Built on: Expansion report draft v0.9 (September 25, 2026); Board brief v2 (September 10, 2026); Market sizing v3 (September 14, 2026)
 
 ## Where it stands
-- Draft v0.9 is complete. Market size, regulations and competitors are folded in; interviews is folded in except finding B.
+- Draft v0.9 is complete. The market-size, regulations and competitors lines are folded in; interviews is folded in except finding B.
 - Interviews finding B (Canadian demand) is still out: three Canadian utilities are booked for the week of September 28.
 
 ## Ready to fold in
