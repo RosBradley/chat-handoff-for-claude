@@ -116,12 +116,15 @@ Each project can have a rules file that says which chats fold into which, where 
 
 ### claude.ai (web, desktop and mobile)
 
-1. Zip the skill folder itself, so the archive's top level is `chat-handoff/`:
-   ```bash
-   cd skills
-   zip -r chat-handoff.zip chat-handoff/
-   ```
-2. Upload `chat-handoff.zip` and turn it on under **Customize > Skills**.
+1. Download [chat-handoff.zip](https://github.com/RosBradley/chat-handoff-for-claude/releases/latest/download/chat-handoff.zip) from the [latest release](https://github.com/RosBradley/chat-handoff-for-claude/releases/latest).
+2. Upload it and turn it on under **Customize > Skills**.
+
+To build the zip yourself instead (for a version not yet released), zip the skill folder itself, so the archive's top level is `chat-handoff/`:
+
+```bash
+cd skills
+zip -r chat-handoff.zip chat-handoff/
+```
 
 ### Claude Code
 

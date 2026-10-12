@@ -12,6 +12,7 @@
 - `handoffs` shows each line's latest chat.
 - The skill and plugin descriptions say the skill reviews a side chat's work item by item and folds in what the user approves.
 - The rules template and the worked example use the new names and titles (`market-size.2`, `folded.market-size.2`).
+- claude.ai users download `chat-handoff.zip` from the latest GitHub release instead of zipping the folder themselves. A new version in `plugin.json` publishes its release automatically.
 - Upgrading from 0.2.0: older handoff files still work. A line named with two words (`Handoff - market size.md`) can move to one word with `handoff market-size` in its chat, which saves the new file and deletes the old one.
 
 ## 0.2.0 (October 10, 2026)
