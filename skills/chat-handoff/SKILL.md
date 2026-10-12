@@ -5,29 +5,7 @@ description: "Carries a chat's work into a new chat, or reviews a side chat's wo
 
 # Chat Handoff
 
-## Why
-
-Claude re-reads the entire chat every time the user sends a message. So the longer a chat runs, the more each new message costs, even a one-line "thanks":
-
-- **Usage and dollars.** On a Claude plan, usage limits are based on the length of the whole chat, not just the number of messages, so a long chat uses up the limit faster. On the API, the full history is sent, and billed, with every request.
-- **Speed.** Claude answers shorter chats faster.
-- **Detail.** Near a chat's length limit, the app either summarizes older messages on its own, choosing what to keep, or stops the chat.
-
-Starting a fresh chat avoids all three, but normally means explaining the work all over again.
-
-## What Chat Handoff does
-
-This skill doesn't move or copy a chat. It lets the user pick up the conversation in a new chat, or fold a side chat's work into a main one, with short commands (all detailed below):
-
-- **`handoff`**: this skill writes a short handoff file, about 400 words: where the work stands, what was decided, what is still open, the next step, and what not to redo.
-- **`pickup <name>`**, as the first message of a new chat: this skill reads the handoff file, and only the files it points to, and the new chat carries on from there.
-- **`fold <name>`**, in a main (master) chat that side chats feed into: this skill reviews the side chat's handed-off work as an independent second reviewer. It rechecks the figures against the current sources, looks for gaps and for conflicts with what is already settled, and gives each item a verdict (keep, change, toss, or return to the side chat for more work). Nothing is folded in until the user approves.
-
-Each command has a dot-style twin for users who think in git terms (`.push`, `.pull`, `.merge`).
-
-**How it saves.** A chat picked up from a handoff carries the handoff and the files it opens, not the old chat's back-and-forth, so each message costs far less. For example, once a chat has grown to 150,000 tokens, every message makes Claude re-read all 150,000; the new chat starts from a 400-word handoff instead. Side chats do the same for a main chat: the heavy work happens elsewhere, and only the reviewed results come back. And what carries forward is a deliberate handoff (decisions, open items, next step, what not to redo), not an automatic summary.
-
-This skill also suggests a title for each chat as its state changes, in the words of the commands the user types (`handedoff.budget.3` after `handoff`, `pushed.budget.3` after `.push`). Renaming is optional.
+Claude re-reads the whole chat with every message, so a long chat uses up the user's limits faster, costs more on the API, answers more slowly, and near the length limit gets summarized or stopped. This skill doesn't move or copy a chat. It saves a short, deliberate handoff (decisions, open items, next step, what not to redo) that a fresh chat picks up, or it reviews a side chat's work item by item so a master chat folds in only what the user approves.
 
 ## Commands
 
@@ -66,7 +44,7 @@ Several chats may run at once, so a chat writes only its own line's file. The on
 - Take the name from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. If the user gives only the line (`handoff budget`), take the number from the line's file, whose status names the chat now continuing the line; if the file doesn't settle it, ask once, in one line ("Is this budget.3? Reply yes or give the number."). If the chat has no name at all, the first time a command needs one, ask once, in one line, with a short line drawn from the chat's topic ("Use budget.1 as this chat's handoff name? Reply yes or give another."), and use the answer. Never pick a name silently: Claude can't see chat titles, so the number comes from the user or the file, never a guess.
 - Names match loosely: `pickup budget`, `pickup budget.3` and one distinctive word all find the line's file.
 
-**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different number on the same line is not a rename: it only corrects this chat's number.
+**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different number on the same line is not a rename: it only corrects this chat's number. A rename keeps this chat's number unless the new name gives one (`handoff budget` in `research.2` makes it `budget.2`).
 
 1. Save the file under the new line, with its `# Handoff:` line changed to match.
 2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first.
@@ -92,9 +70,9 @@ Big work products (proposal lists, analyses, specs) stay in their own files. The
 
 ### Without a file store
 
-A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <line>.<N>, <date>`.
+A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <line>.<N>, <date>`. `<line>.<N>` names the chat that last handed the line off (the file's "From" line); a master posting a file it is folding in uses that name too, not its own.
 
-`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the highest number, or, on the same number, the latest date. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
+`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the highest number; on the same number, the latest date; on the same date, the one from the more recent chat. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
 
 ## The rules file (optional, one per project)
 

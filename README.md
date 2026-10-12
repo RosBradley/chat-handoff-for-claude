@@ -45,7 +45,7 @@ Use plain words or the dot style, whichever you like:
 - Names match loosely: `pickup budget` and `pickup budget.3` both find "Handoff - budget.md". If two match, the skill asks which.
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
-- A different line renames: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different number on the same line (`handoff budget.4` in `budget.3`) only corrects the number.
+- A different line renames, and the chat keeps its number: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different number on the same line (`handoff budget.4` in `budget.3`) only corrects the number.
 
 ## Chat names
 
