@@ -1,6 +1,6 @@
 # Handoff: interviews
-Status: returned from report.1, September 16, 2026
-From: interviews.1, September 15, 2026
+Status: returned from report, September 16, 2026
+From: interviews, September 15, 2026
 Built on: Interview guide v2 (September 1, 2026); Interview notes 1 to 5 (September 3 to 14, 2026)
 
 ## Where it stands

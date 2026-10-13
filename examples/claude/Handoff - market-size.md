@@ -1,6 +1,6 @@
 # Handoff: market-size
 Status: waiting
-From: market-size.1, September 9, 2026
+From: market-size, September 9, 2026
 Built on: Board brief v1 (September 1, 2026); Market sizing v2 (September 9, 2026)
 
 ## Where it stands

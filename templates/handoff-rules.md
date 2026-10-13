@@ -40,11 +40,11 @@ Re-read the file right before saving.
 ## Chat titles
 *The title for each state. These are the skill's defaults: change the words, or delete this section to keep them. Renaming a chat is always optional.*
 
-- Working, a master included: "todo.<line>.N"
-- Handed off (continuing in a new chat, or waiting for the master): "handedoff.<line>.N", or "pushed.<line>.N" after dot-style commands (`.push`, `.pull`)
-- Work sent back: "returned.<line>.N"
-- Folded into the master: "folded.<line>.N", or "merged.<line>.N" after `.merge`
-- Work went out: "done.<line>.N"
+- Working, a master included: "todo.<name>"
+- Handed off (continuing in a new chat, or waiting for the master): "handedoff.<name>", or "pushed.<name>" after dot-style commands (`.push`, `.pull`)
+- Work sent back: "returned.<name>"
+- Folded into the master: "folded.<name>", or "merged.<name>" after `.merge`
+- Work went out: "done.<name>"
 
 ## Never
 *Work no handoff may start without being asked.*

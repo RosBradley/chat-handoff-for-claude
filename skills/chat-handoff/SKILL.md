@@ -14,7 +14,7 @@ Two sets of words do the same things; the user can use either.
 | Plain words | Dot style | What happens |
 |---|---|---|
 | `handoff` | `.push` | Saves this chat's handoff file. If the chat has no name yet, asks for one first, with a suggestion |
-| `handoff <name>` | `.push <name>` | Saves it under that name, for example `handoff budget.3` (see "Names"). A different line renames it (see "Renaming") |
+| `handoff <name>` | `.push <name>` | Saves it under that name, for example `handoff budget` or `handoff budget.pre` (see "Names"). A different line renames it (see "Renaming") |
 | `handoff?` | `.push?` | Answers in one line: is this a good time to hand off? |
 | `pickup <name>` | `.pull <name>` | Continues that chat's work in this chat (normally the first message of a new chat) |
 | `fold <name>` | `.merge <name>` | Reviews that chat's work item by item, gives each item a verdict, and folds what the user approves into this chat, the master |
@@ -38,14 +38,14 @@ Replies stay short, bottom line first.
 
 Several chats may run at once, so a chat writes only its own line's file. The one exception: a master marking items, setting the status or writing a receipt in a file it is folding in.
 
-**Names.** A chat's name is its line and its number, joined by a dot: `budget.3` is the third chat on the budget line.
+**Names.** A chat's name is its line, with an optional tag after a dot: `budget` is a chat on the budget line; `budget.pre` is one the user chose to tag.
 
 - The line is the working name: one word of letters, digits or hyphens, with no spaces or dots (for example `research`, `budget`, `tax-harvest`). One file per line, `Handoff - <line>.md`, serves every chat on that line.
-- The number counts the chats on the line. The first is 1; a chat started by `pickup` takes the next number after the chat it continues. Read a name by splitting it at its last dot.
-- Take the name from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. If the user gives only the line (`handoff budget`), take the number from the line's file, whose status names the chat now continuing the line; if the file doesn't settle it, ask once, in one line ("Is this budget.3? Reply yes or give the number."). If the chat has no name at all, the first time a command needs one, ask once, in one line, with a short line drawn from the chat's topic ("Use budget.1 as this chat's handoff name? Reply yes or give another."), and use the answer. Never pick a name silently: Claude can't see chat titles, so the number comes from the user or the file, never a guess.
-- Names match loosely: `pickup budget`, `pickup budget.3` and one distinctive word all find the line's file.
+- The tag is the user's, for telling chats on one line apart: a word, a letter, a number, whatever they like (`budget.pre`, `budget.B`, `budget.2`). This skill never invents a tag and never asks for one; a chat with no tag is simply named by its line. Read a name by splitting it at its first dot.
+- Take the name from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. If the chat has no name at all, the first time a command needs one, ask once, in one line, with a short line drawn from the chat's topic ("Use budget as this chat's handoff name? Reply yes or give another."), and use the answer. Never pick a name silently: Claude can't see chat titles.
+- Names match loosely: `pickup budget`, `pickup budget.pre` and one distinctive word all find the line's file. Order between chats on a line comes from the dates in the file, never from the tag.
 
-**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different number on the same line is not a rename: it only corrects this chat's number. A rename keeps this chat's number unless the new name gives one (`handoff budget` in `research.2` makes it `budget.2`).
+**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different tag on the same line is not a rename: it only sets or changes this chat's tag. A rename keeps this chat's tag unless the new name gives one (`handoff budget` in `research.pre` makes it `budget.pre`).
 
 1. Save the file under the new line, with its `# Handoff:` line changed to match.
 2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first.
@@ -53,17 +53,17 @@ Several chats may run at once, so a chat writes only its own line's file. The on
 
 Rename only this chat's own line. If the old file's status shows another chat already has it (`continuing in`, `folded into` or `merged into`), ask first, since that chat knows it by the old name. Without a file store, an earlier post can't be removed, so the new post's heading adds "(renamed from <old>)".
 
-**Chat titles.** Claude can't see or rename chats. Whenever a chat's state changes, suggest the title the user can rename it to, and say it's optional ("Optional: rename this chat handedoff.budget.3."). Commands find handoffs by file name, never by chat title, so everything works the same whether or not a chat is renamed.
+**Chat titles.** Claude can't see or rename chats. Whenever a chat's state changes, suggest the title the user can rename it to, and say it's optional ("Optional: rename this chat handedoff.budget."). Commands find handoffs by file name, never by chat title, so everything works the same whether or not a chat is renamed.
 
-A title is a state word, a dot and the chat's name. The state word comes first, so it still shows when the sidebar cuts a long title off, and, as long as the user sticks to one command style, a search for it (`folded.`, say) finds every chat in that state. Where a state is named after a command, its word follows the style of the command just typed; the other states use the same word in both styles. Use the rules file's titles if it sets them; otherwise:
+A title is a state word, a dot and the chat's name (line, or line and tag). The state word comes first, so it still shows when the sidebar cuts a long title off, and, as long as the user sticks to one command style, a search for it (`folded.`, say) finds every chat in that state. Where a state is named after a command, its word follows the style of the command just typed; the other states use the same word in both styles. Use the rules file's titles if it sets them; otherwise:
 
 | The chat is | After plain words | After dot style | Suggested by |
 |---|---|---|---|
-| Working, a master included | `todo.<line>.N` | `todo.<line>.N` | `handoff` and `pickup`, for the next chat; the master, when a side chat's topic stays open |
-| Handed off: its work continues in `<line>.N+1`, or waits for the master | `handedoff.<line>.N` | `pushed.<line>.N` | `handoff`, for this chat; `pickup`, for the old chat |
-| Has work sent back to it | `returned.<line>.N` | `returned.<line>.N` | The master's fold |
-| Finished, folded into the master | `folded.<line>.N` | `merged.<line>.N` | The master's fold |
-| Finished: its work went out, nothing handed on | `done.<line>.N` | `done.<line>.N` | The last chat in a chain, once everything is settled |
+| Working, a master included | `todo.<name>` | `todo.<name>` | `handoff` and `pickup`, for the next chat; the master, when a side chat's topic stays open |
+| Handed off: its work continues in a new chat, or waits for the master | `handedoff.<name>` | `pushed.<name>` | `handoff`, for this chat; `pickup`, for the old chat |
+| Has work sent back to it | `returned.<name>` | `returned.<name>` | The master's fold |
+| Finished, folded into the master | `folded.<name>` | `merged.<name>` | The master's fold |
+| Finished: its work went out, nothing handed on | `done.<name>` | `done.<name>` | The last chat in a chain, once everything is settled |
 
 **Item letters.** Items to fold in are lettered A, B, C. A letter belongs to one item for the life of a line: a reworked item keeps its letter, and new items continue after the highest letter already used (in the items, the "Don't redo" list or the receipt). Never reuse a letter.
 
@@ -71,9 +71,9 @@ Big work products (proposal lists, analyses, specs) stay in their own files. The
 
 ### Without a file store
 
-A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <line>.<N>, <date>`. `<line>.<N>` names the chat that last handed the line off (the file's "From" line); a master posting a file it is folding in uses that name too, not its own.
+A chat can't change an earlier chat's messages, so here every write is a post. Wherever this skill says to save the file, set its status, mark items or write a receipt, post the line's whole file as it now stands at the end of the reply, under the heading `HANDOFF: <name>, <date>`. `<name>` is the chat that last handed the line off (the file's "From" line); a master posting a file it is folding in uses that name too, not its own.
 
-`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the highest number; on the same number, the latest date; on the same date, the one from the more recent chat. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
+`pickup`, `fold` and `handoffs` find these posts with past-chat search (query `HANDOFF <line>`) and use the newest one for each line: the latest date; on the same date, the one from the more recent chat. If past-chat search is off or finds nothing, say so and ask the user to paste the handoff.
 
 ## The rules file (optional, one per project)
 
@@ -105,15 +105,15 @@ A chat that has been handed off or folded in is finished; its work lives in anot
 
 - an earlier message in this chat ran `handoff` (`.push`), and nothing since reopened it (see choice 3 below);
 - the line's file status says this chat's work moved on: `continuing in`, `folded into`, `merged into` or `done`;
-- the line's file was written by a later chat on the line (its `From` line names `<line>.<M>` with M above this chat's number), so this chat is behind.
+- the line's file was written by another chat on the line after this chat's last handoff (its `From` line names a different tag, or a later date, than this chat's own last handoff), so this chat is behind.
 
 **What triggers it.** Any message that is not a handoff command and not a bare acknowledgment (thanks, ok, got it). Commands always run: `handoff` again in a stale chat updates the file, `handoffs` lists, and so on.
 
-**What this skill does.** Don't act on the message. Read the line's file for the current status, then ask. Two lines, then the choices: the first line says this chat is handed off and where the work is now ("This chat was handed off as budget.3 on October 12; the work continues in budget.4."); the second asks whether to run the instruction here anyway. Offer the choices as buttons when the chat can show them (the AskUserQuestion tool); otherwise end with "Reply stop, continue or reopen."
+**What this skill does.** Don't act on the message. Read the line's file for the current status, then ask. Two lines, then the choices: the first line says this chat is handed off and where the work is now ("This chat was handed off as budget.pre on October 12; the work continues in budget.post."); the second asks whether to run the instruction here anyway. Offer the choices as buttons when the chat can show them (the AskUserQuestion tool); otherwise end with "Reply stop, continue or reopen."
 
-1. **Stop** (recommended, first in the list). Don't run it here. Reply with the chat to use instead, by its name and suggested title ("Type it in todo.budget.4"), and nothing else. No part of the instruction is carried out, not even a partial answer.
+1. **Stop** (recommended, first in the list). Don't run it here. Reply with the chat to use instead, by its name and suggested title ("Type it in todo.budget.post"), and nothing else. No part of the instruction is carried out, not even a partial answer.
 2. **Continue here, once.** Run the instruction in this chat, but the chat stays stale: the next instruction gets the warning again. If the result matters to the line, end the reply by suggesting `handoff` (`.push`) so the file catches up.
-3. **Reopen this chat.** Run it, and this chat takes the line back; the guard stays off until the next `handoff`. Set the file status to `waiting` and suggest the optional title `todo.<line>.N`. If the status showed another chat already continuing the line, say that both chats now hold it, and that the user should `handoff` from whichever one wins so the file settles it.
+3. **Reopen this chat.** Run it, and this chat takes the line back; the guard stays off until the next `handoff`. Set the file status to `waiting` and suggest the optional title `todo.<name>`. If the status showed another chat already continuing the line, say that both chats now hold it, and that the user should `handoff` from whichever one wins so the file settles it.
 
 Never run the instruction before the user answers, and never let the warning swallow the instruction: once the user answers continue or reopen, carry out the message exactly as typed. If the user types a new instruction instead of answering, treat that as choosing stop for the first one and warn once more, since the chat is still stale.
 
@@ -130,7 +130,7 @@ Never run the instruction before the user answers, and never let the warning swa
 ```
 # Handoff: <line>
 Status: waiting
-From: <line>.<N>, <date>
+From: <name>, <date>
 Built on: <the files this work rests on, with versions and dates>
 
 ## Where it stands
@@ -158,7 +158,7 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
 3. Leave out background, history and reasoning already recorded in project files or memory.
 4. **Cold read.** Before saving, read the draft as a fresh chat would, with only this file and its "Read first" files. Could it take the next step without asking anything? If not, add what's missing, within the length limit.
 5. Save it. In a Project, `project_write` overwrites the line's file, with `present_to_user: true`. For a rename, delete the old file now (see "Renaming").
-6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handedoff.<line>.N` (`pushed.<line>.N` after `.push`), and, if continuing, the new chat `todo.<line>.N+1`. For example: "Optional: rename this chat handedoff.budget.3, and title the new one todo.budget.4." End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
+6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handedoff.<name>` (`pushed.<name>` after `.push`), and, if continuing, the new chat `todo.<line>` (the user can add a tag of their own when they pick it up). For example: "Optional: rename this chat handedoff.budget, and title the new one todo.budget." End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
 
 ## `handoff?` (`.push?`)
 
@@ -166,7 +166,7 @@ One line. **Yes** when the chat is at a stopping point (a deliverable finished, 
 
 ## Finding a handoff by name
 
-For `pickup <name>`, `fold <name>` and their dot forms: match the name's line loosely against handoff file names (without a file store, against past-chat search); one distinctive word is enough, and a number after the dot only confirms which chat handed off. If two match, ask which. If no handoff file matches but another file clearly holds handed-off work (one written before this skill, for example), use it as the handoff and treat its proposals as the items. If the status says the line is already continuing in another chat, say so and ask before taking it over.
+For `pickup <name>`, `fold <name>` and their dot forms: match the name's line loosely against handoff file names (without a file store, against past-chat search); one distinctive word is enough, and a tag after the dot only confirms which chat handed off. If two match, ask which. If no handoff file matches but another file clearly holds handed-off work (one written before this skill, for example), use it as the handoff and treat its proposals as the items. If the status says the line is already continuing in another chat, say so and ask before taking it over.
 
 `pickup <name>` always continues and `fold <name>` always folds in; never guess between them.
 
@@ -178,8 +178,8 @@ For `pickup <name>`, `fold <name>` and their dot forms: match the name's line lo
 
 1. Read the handoff and its "Read first" files. Don't read the old chat unless something needed is missing.
 2. If newer versions of the "Built on" files exist, say so.
-3. This chat is `<line>.<N+1>`, where N is the number on the file's "From" line. If that line shows no number in this form (an older file), use the chat number it does show, or ask. Set the status to `continuing in <line>.<N+1>, <date>`.
-4. Reply in five lines or fewer: what is picked up, anything stale, the optional titles, worded for the user since Claude can't see which chats are renamed ("Optional: title this chat todo.budget.4; if you haven't already, rename the old one handedoff.budget.3", or `pushed` after `.pull`), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
+3. This chat is named by the line, plus the tag if the user typed one in the pickup command (`pickup budget.post` makes this chat `budget.post`); a tag that matches the file's "From" line names the old chat, not this one, so this chat stays untagged. Set the status to `continuing in <name>, <date>` (`continuing in a new chat, <date>` when this chat has no tag). A "From" line with a trailing number (`budget.3`, from an older version) is just a tag.
+4. Reply in five lines or fewer: what is picked up, anything stale, the optional titles, worded for the user since Claude can't see which chats are renamed ("Optional: title this chat todo.budget.post; if you haven't already, rename the old one handedoff.budget.pre", or `pushed` after `.pull`), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
 
 ## Fold in: `fold <name>` (`.merge <name>`)
 
@@ -200,9 +200,9 @@ D. EU: $600M a year (Market sizing v3, section 5). Tossed, September 12, 2026: B
 
 7. **Open items:** small ones join this chat's open list.
 8. **Set the side chat's status, and suggest its optional title** in the style of the fold command just typed:
-   - Any item returned: `Status: returned from <this chat's name>, <date>`. Suggest the title `returned.<line>.N`, and tell the user to type `pickup` (`.pull`) in that chat, or `pickup <line>` (`.pull <line>`) as the first message of a new chat.
-   - Nothing returned, but a whole topic still open: `Status: continuing in <side chat's name>, <date>`. Suggest the side chat goes back to `todo.<line>.N`.
-   - Everything settled: cut the file down to a receipt, with `Status: folded into` (`merged into` after `.merge`), and suggest the title `folded.<line>.N` (`merged.<line>.N` after `.merge`). Tossed items stay in the receipt with their reason, so they don't come back.
+   - Any item returned: `Status: returned from <this chat's name>, <date>`. Suggest the title `returned.<name>`, and tell the user to type `pickup` (`.pull`) in that chat, or `pickup <line>` (`.pull <line>`) as the first message of a new chat.
+   - Nothing returned, but a whole topic still open: `Status: continuing in <side chat's name>, <date>`. Suggest the side chat goes back to `todo.<name>`.
+   - Everything settled: cut the file down to a receipt, with `Status: folded into` (`merged into` after `.merge`), and suggest the title `folded.<name>` (`merged.<name>` after `.merge`). Tossed items stay in the receipt with their reason, so they don't come back.
 
 ```
 # Handoff: <line>
@@ -210,7 +210,7 @@ Status: folded into <this chat's name>, <date>
 Kept: A, B, D (to <where>). Changed: C (<how>). Tossed: I (<why>).
 ```
 
-9. **Done:** if this chat folds into no other line (per the rules file, or because the user says it's the end) and nothing is waiting, returned or open, say the work is complete and where it is, and suggest the optional title `done.<line>.N` for this chat once the work goes out. If this line has a handoff file, set its status to `done, <date>`.
+9. **Done:** if this chat folds into no other line (per the rules file, or because the user says it's the end) and nothing is waiting, returned or open, say the work is complete and where it is, and suggest the optional title `done.<name>` for this chat once the work goes out. If this line has a handoff file, set its status to `done, <date>`.
 
 ## `pickup` with no name (`.pull`)
 
@@ -218,4 +218,4 @@ If this chat's line has a file with status `returned`, start on the items marked
 
 ## `handoffs` (`.status`)
 
-List each handoff file (not the rules file): line, the latest chat's name, status, date, and one line on what it holds. Build the list from the handoff files themselves (without a file store, from the newest post for each line). Never keep a shared tracker file: several chats would overwrite it.
+List each handoff file (not the rules file): line, the chat that last handed it off, status, date, and one line on what it holds. Build the list from the handoff files themselves (without a file store, from the newest post for each line). Never keep a shared tracker file: several chats would overwrite it.

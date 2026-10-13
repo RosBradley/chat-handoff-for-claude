@@ -34,27 +34,28 @@ Use plain words or the dot style, whichever you like:
 
 | Plain words | Dot style | What happens |
 |---|---|---|
-| `handoff` | `.push` | Saves this chat's handoff file. If the chat has no name yet, the skill suggests one, like `budget.1` (see Chat names) |
-| `handoff <name>` | `.push <name>` | Saves it under that name (`handoff budget.3`); a different line renames it |
+| `handoff` | `.push` | Saves this chat's handoff file. If the chat has no name yet, the skill suggests one, like `budget` (see Chat names) |
+| `handoff <name>` | `.push <name>` | Saves it under that name (`handoff budget`, or `handoff budget.pre` with a tag of your own); a different line renames it |
 | `handoff?` | `.push?` | One line: is this a good time to hand off? |
 | `pickup <name>` | `.pull <name>` | Continues that chat's work here, usually as the first message of a new chat |
 | `fold <name>` | `.merge <name>` | Reviews that chat's work item by item and folds in what you approve |
 | `pickup` | `.pull` | In a chat with work sent back to it: starts on the returns. Anywhere else: lists what is waiting and asks |
 | `handoffs` | `.status` | Lists every handoff and its status |
 
-- Names match loosely: `pickup budget` and `pickup budget.3` both find "Handoff - budget.md". If two match, the skill asks which.
+- Names match loosely: `pickup budget` and `pickup budget.pre` both find "Handoff - budget.md". If two match, the skill asks which.
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
 - Once a chat has been handed off or folded in, an ordinary instruction typed into it gets a warning before anything runs (see Stale chat guard). Handoff commands still work there.
-- A different line renames, and the chat keeps its number: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different number on the same line (`handoff budget.4` in `budget.3`) only corrects the number.
+- A different line renames, and the chat keeps its tag: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different tag on the same line (`handoff budget.post` in `budget.pre`) only changes the tag.
 
 ## Chat names
 
-Each chat's name is its line and its number, joined by a dot: `budget.3` is the third chat on the budget line.
+Each chat is named by its line, with an optional tag after a dot: `budget` is a chat on the budget line; `budget.pre` is one you tagged.
 
 - The line is one word: letters, digits or hyphens, like `research` or `market-size`. One handoff file per line serves every chat on it.
-- A chat started by `pickup` takes the next number after the chat it continues.
-- Claude can't see chat titles, so the number comes from your command or the handoff file, never a guess. If neither settles it, the skill asks once.
+- The tag is yours, for telling chats on one line apart: a word, a letter, a number, whatever suits you (`budget.pre`, `budget.B`, `budget.2`). The skill never invents one and never asks for one. Give a new chat its tag in the pickup command (`pickup budget.post`), or any time with `handoff budget.post`.
+- Order between chats on a line comes from the dates in the handoff file, not from the tag, so untagged chats work fine.
+- Claude can't see chat titles, so a chat's name comes from your command or the handoff file. If the chat has no name yet, the skill asks once.
 
 ## How it works
 
@@ -81,15 +82,15 @@ Each chat's name is its line and its number, joined by a dot: `budget.3` is the 
 
 Claude can't see or rename chats, so whenever a chat's state changes, the skill suggests a new title for it. Renaming is optional: commands find handoff files by name, never by chat title.
 
-A title is a state word, a dot and the chat's name. The state comes first, so you can read it in the sidebar even when a long title is cut off. The words follow the commands you use:
+A title is a state word, a dot and the chat's name (line, or line and tag). The state comes first, so you can read it in the sidebar even when a long title is cut off. The words follow the commands you use:
 
 | The chat is | After plain words | After dot style |
 |---|---|---|
-| Working, a master included | `todo.market-size.2` | `todo.market-size.2` |
-| Handed off: continuing in a new chat, or waiting for the master | `handedoff.market-size.2` | `pushed.market-size.2` |
-| Has work sent back to it | `returned.market-size.2` | `returned.market-size.2` |
-| Finished, folded into the master | `folded.market-size.2` | `merged.market-size.2` |
-| Finished: its work went out (sent, published, shipped) | `done.review.1` | `done.review.1` |
+| Working, a master included | `todo.market-size.au` | `todo.market-size.au` |
+| Handed off: continuing in a new chat, or waiting for the master | `handedoff.market-size.au` | `pushed.market-size.au` |
+| Has work sent back to it | `returned.market-size.au` | `returned.market-size.au` |
+| Finished, folded into the master | `folded.market-size.au` | `merged.market-size.au` |
+| Finished: its work went out (sent, published, shipped) | `done.review` | `done.review` |
 
 If you stick to one command style, one search (`folded.`, say) finds every chat in that state. A rules file can set different titles.
 
@@ -97,13 +98,13 @@ If you stick to one command style, one search (`folded.`, say) finds every chat 
 
 Old chats stay in the sidebar, so sooner or later you type something into one that has already been handed off or folded in. The skill catches it before anything runs: it tells you where the work lives now and asks what to do, with buttons where the app can show them.
 
-> This chat was handed off as budget.3 on October 12; the work continues in budget.4. Run your instruction here anyway?
+> This chat was handed off as budget.pre on October 12; the work continues in budget.post. Run your instruction here anyway?
 >
-> **Stop** (recommended): nothing runs; go to todo.budget.4.
+> **Stop** (recommended): nothing runs; go to todo.budget.post.
 > **Continue here, once**: runs it, and you'll be asked again next time.
 > **Reopen this chat**: runs it, and this chat takes the budget line back until its next handoff.
 
-A chat counts as handed off when `handoff` or `.push` ran in it, when its line's file says the work moved on (`continuing in`, `folded into`, `merged into` or `done`), or when a later chat on the same line has since written the file. Handoff commands always run, so `handoff` again in an old chat just brings the file up to date. Every `handoff` reply ends by saying the guard is on, so the warning never comes as a surprise.
+A chat counts as handed off when `handoff` or `.push` ran in it, when its line's file says the work moved on (`continuing in`, `folded into`, `merged into` or `done`), or when another chat on the same line has since written the file. Handoff commands always run, so `handoff` again in an old chat just brings the file up to date. Every `handoff` reply ends by saying the guard is on, so the warning never comes as a surprise.
 
 ## Where the files live
 

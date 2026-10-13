@@ -1,6 +1,6 @@
 # Handoff: report
 Status: waiting
-From: report.1, September 25, 2026
+From: report, September 25, 2026
 Built on: Expansion report draft v0.9 (September 25, 2026); Board brief v2 (September 10, 2026); Market sizing v3 (September 14, 2026)
 
 ## Where it stands
