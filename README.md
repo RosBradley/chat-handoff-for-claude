@@ -45,6 +45,7 @@ Use plain words or the dot style, whichever you like:
 - Names match loosely: `pickup budget` and `pickup budget.3` both find "Handoff - budget.md". If two match, the skill asks which.
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
+- Once a chat has been handed off or folded in, an ordinary instruction typed into it gets a warning before anything runs (see Stale chat guard). Handoff commands still work there.
 - A different line renames, and the chat keeps its number: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different number on the same line (`handoff budget.4` in `budget.3`) only corrects the number.
 
 ## Chat names
@@ -91,6 +92,18 @@ A title is a state word, a dot and the chat's name. The state comes first, so yo
 | Finished: its work went out (sent, published, shipped) | `done.review.1` | `done.review.1` |
 
 If you stick to one command style, one search (`folded.`, say) finds every chat in that state. A rules file can set different titles.
+
+## Stale chat guard
+
+Old chats stay in the sidebar, so sooner or later you type something into one that has already been handed off or folded in. The skill catches it before anything runs: it tells you where the work lives now and asks what to do, with buttons where the app can show them.
+
+> This chat was handed off as budget.3 on October 12; the work continues in budget.4. Run your instruction here anyway?
+>
+> **Stop** (recommended): nothing runs; go to todo.budget.4.
+> **Continue here, once**: runs it, and you'll be asked again next time.
+> **Reopen this chat**: runs it, and this chat takes the budget line back until its next handoff.
+
+A chat counts as handed off when `handoff` or `.push` ran in it, when its line's file says the work moved on (`continuing in`, `folded into`, `merged into` or `done`), or when a later chat on the same line has since written the file. Handoff commands always run, so `handoff` again in an old chat just brings the file up to date. Every `handoff` reply ends by saying the guard is on, so the warning never comes as a surprise.
 
 ## Where the files live
 

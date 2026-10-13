@@ -2,6 +2,7 @@
 
 ## 0.3.0 (in testing)
 
+- Stale chat guard: an ordinary instruction typed into a chat that was already handed off or folded in gets a warning first, with Stop (recommended), Continue here once, and Reopen this chat as the choices, shown as buttons where the app can. Handoff commands still run in such a chat, and every `handoff` reply says the guard is on.
 - New opening in the README: why long chats cost more (Claude re-reads the whole chat with every message, so usage limits, API cost and speed all suffer, and near the length limit the app summarizes older messages or stops the chat), what the skill does (it doesn't move or copy a chat), and how it saves, with sources. The skill opens with a two-sentence summary instead, since Claude reads the skill with every command.
 - Named Chat Handoff; the skill's ID stays `chat-handoff`. The docs say "the skill" wherever the skill does the work, and "Claude" only for what Claude itself does or can't do.
 - Chats are named by line and number: `budget.3` is the third chat on the budget line. A line is one word (letters, digits or hyphens). The number comes from the command or the handoff file, never a guess; `handoff budget` takes it from the file.

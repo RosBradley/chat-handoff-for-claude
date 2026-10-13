@@ -1,6 +1,6 @@
 ---
 name: chat-handoff
-description: "Carries a chat's work into a new chat, or reviews a side chat's work item by item and folds what the user approves into a master chat. Use when the user's message is a handoff command, in any case: handoff (with or without a name), handoff?, pickup (with or without a chat name), fold (with a chat name), handoffs, or the dot-prefixed forms .push, .push?, .pull, .merge and .status. Also when the user plainly asks to hand off, pick up or fold in a chat's work. Not when these words appear inside an ordinary sentence, such as picking up the kids or a handoff to another team."
+description: "Carries a chat's work into a new chat, or reviews a side chat's work item by item and folds what the user approves into a master chat. Use when the user's message is a handoff command, in any case: handoff (with or without a name), handoff?, pickup (with or without a chat name), fold (with a chat name), handoffs, or the dot-prefixed forms .push, .push?, .pull, .merge and .status. Also when the user plainly asks to hand off, pick up or fold in a chat's work. Also for ANY other message in a chat that this skill already handed off or folded in (an earlier handoff or .push ran in this chat, or the chat was told it is folded, merged or done), so the stale-chat guard can run before the message is acted on. Not when these words appear inside an ordinary sentence, such as picking up the kids or a handoff to another team."
 ---
 
 # Chat Handoff
@@ -23,6 +23,7 @@ Two sets of words do the same things; the user can use either.
 
 - A command is the user's whole message, or nearly (`handoff please`, `fold budget`), and case doesn't matter: `.Push` and `Handoff` count. A plain request ("let's hand this off") counts too, as plain words. Inside an ordinary sentence these are ordinary words: carry on without this skill.
 - The dot-style words always carry the dot, so they're never mistaken for git commands: `.push` is a handoff, `push` alone is not.
+- In a chat that has already been handed off or folded in, a message that is not a command does not run straight away: see "Stale chat guard".
 - Follow the user's habit: when telling the user what to type next, or suggesting a chat title, use the style of the command they just typed (see "Chat titles").
 
 Replies stay short, bottom line first.
@@ -96,6 +97,28 @@ Work no handoff may start.
 
 **Defaults:** any chat already underway can be the master; approved items go into that chat's own working files or open list; deep review covers anything high-stakes or hard to reverse; titles are suggested as in the table above.
 
+## Stale chat guard
+
+A chat that has been handed off or folded in is finished; its work lives in another chat now. Old chats stay in the sidebar, so sooner or later a message meant for the new chat lands in the old one. This guard catches that before anything runs.
+
+**When this chat is stale.** Any of these:
+
+- an earlier message in this chat ran `handoff` (`.push`), and nothing since reopened it (see choice 3 below);
+- the line's file status says this chat's work moved on: `continuing in`, `folded into`, `merged into` or `done`;
+- the line's file was written by a later chat on the line (its `From` line names `<line>.<M>` with M above this chat's number), so this chat is behind.
+
+**What triggers it.** Any message that is not a handoff command and not a bare acknowledgment (thanks, ok, got it). Commands always run: `handoff` again in a stale chat updates the file, `handoffs` lists, and so on.
+
+**What this skill does.** Don't act on the message. Read the line's file for the current status, then ask. Two lines, then the choices: the first line says this chat is handed off and where the work is now ("This chat was handed off as budget.3 on October 12; the work continues in budget.4."); the second asks whether to run the instruction here anyway. Offer the choices as buttons when the chat can show them (the AskUserQuestion tool); otherwise end with "Reply stop, continue or reopen."
+
+1. **Stop** (recommended, first in the list). Don't run it here. Reply with the chat to use instead, by its name and suggested title ("Type it in todo.budget.4"), and nothing else. No part of the instruction is carried out, not even a partial answer.
+2. **Continue here, once.** Run the instruction in this chat, but the chat stays stale: the next instruction gets the warning again. If the result matters to the line, end the reply by suggesting `handoff` (`.push`) so the file catches up.
+3. **Reopen this chat.** Run it, and this chat takes the line back; the guard stays off until the next `handoff`. Set the file status to `waiting` and suggest the optional title `todo.<line>.N`. If the status showed another chat already continuing the line, say that both chats now hold it, and that the user should `handoff` from whichever one wins so the file settles it.
+
+Never run the instruction before the user answers, and never let the warning swallow the instruction: once the user answers continue or reopen, carry out the message exactly as typed. If the user types a new instruction instead of answering, treat that as choosing stop for the first one and warn once more, since the chat is still stale.
+
+**Cost.** One file read per guarded message. After stop, nothing else. The `handoff` reply tells the user the guard is on, so the warning never comes as a surprise.
+
 ## `handoff` (`.push`)
 
 1. Settle the name (see "Names" and "Renaming"). Read the rules file, and the line's current file if one exists. From it, carry forward:
@@ -135,7 +158,7 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
 3. Leave out background, history and reasoning already recorded in project files or memory.
 4. **Cold read.** Before saving, read the draft as a fresh chat would, with only this file and its "Read first" files. Could it take the next step without asking anything? If not, add what's missing, within the length limit.
 5. Save it. In a Project, `project_write` overwrites the line's file, with `present_to_user: true`. For a rename, delete the old file now (see "Renaming").
-6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handedoff.<line>.N` (`pushed.<line>.N` after `.push`), and, if continuing, the new chat `todo.<line>.N+1`. For example: "Optional: rename this chat handedoff.budget.3, and title the new one todo.budget.4."
+6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handedoff.<line>.N` (`pushed.<line>.N` after `.push`), and, if continuing, the new chat `todo.<line>.N+1`. For example: "Optional: rename this chat handedoff.budget.3, and title the new one todo.budget.4." End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
 
 ## `handoff?` (`.push?`)
 
