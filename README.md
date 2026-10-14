@@ -42,6 +42,7 @@ Use plain words or the dot style, whichever you like:
 | `pickup` | `.pull` | In a chat with work sent back to it: starts on the returns. Anywhere else: lists what is waiting and asks |
 | `handoffs` | `.status` | Lists every handoff and its status |
 
+- A name has no spaces: `handoff market-size`, not `handoff market size`. If you type spaces anyway, the skill joins the words with hyphens and tells you the name it used (see Chat names).
 - Names match loosely: `pickup budget` and `pickup budget.pre` both find "Handoff - budget.md". If two match, the skill asks which.
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
@@ -52,7 +53,8 @@ Use plain words or the dot style, whichever you like:
 
 Each chat is named by its line, with an optional tag after a dot: `budget` is a chat on the budget line; `budget.pre` is one you tagged.
 
-- The line is one word: letters, digits or hyphens, like `research` or `market-size`. One handoff file per line serves every chat on it.
+- The line is one word: letters, digits or hyphens, like `research` or `market-size`, with no spaces. One handoff file per line serves every chat on it.
+- Typed with spaces, a name is joined with hyphens: `handoff market size` saves `market-size`. On a line that already exists, the last word is read as your tag: `handoff market size au` on the `market-size` line gives `market-size.au`. The reply says the name it used, so you can change it.
 - The tag is yours, for telling chats on one line apart: a word, a letter, a number, whatever suits you (`budget.pre`, `budget.B`, `budget.2`). The skill never invents one and never asks for one. Give a new chat its tag in the pickup command (`pickup budget.post`), or any time with `handoff budget.post`.
 - Order between chats on a line comes from the dates in the handoff file, not from the tag, so untagged chats work fine.
 - Claude can't see chat titles, so a chat's name comes from your command or the handoff file. If the chat has no name yet, the skill asks once.

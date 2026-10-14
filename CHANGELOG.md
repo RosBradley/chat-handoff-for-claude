@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.1 (in testing)
+## 0.3.2 (in testing)
+
+- Names typed with spaces are joined with hyphens (`handoff market size` saves `market-size`), and the reply says what the name became. On an existing line, the last word is read as the tag (`market size au` on the `market-size` line is `market-size.au`). The README now says names have no spaces.
+
+## 0.3.1 (October 14, 2026)
 
 - Stale chat guard: an ordinary instruction typed into a chat that was already handed off or folded in gets a warning first, with Stop (recommended), Continue here once, and Reopen this chat as the choices, shown as buttons where the app can. Handoff commands still run in such a chat, and every `handoff` reply says the guard is on.
 - Chats are named by line, with an optional tag of the user's own: `budget` or `budget.pre`. The tag is anything the user likes (a word, a letter, a number) and is never invented or asked for by the skill; order between chats on a line comes from the dates in the file. Chat numbers (`budget.3`) and the prompt asking for one are gone; an old `From: budget.3` line is read as a tag.
