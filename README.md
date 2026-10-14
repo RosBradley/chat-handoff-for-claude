@@ -26,7 +26,7 @@ Chains work too: research chats feed a report chat, and the report feeds a fresh
 
 Sources: Anthropic's help center, [How can I maximize my Claude Pro usage?](https://support.anthropic.com/en/articles/8325614-how-can-i-maximize-my-claude-pro-usage) ("Claude needs to re-read the entire conversation every time you send a message"), [Understanding usage and length limits](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Working with messages](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless").
 
-**Status:** v0.3.0, in testing.
+**Status:** v0.3.1, in testing.
 
 ## Commands
 
