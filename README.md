@@ -82,12 +82,12 @@ Each chat is named by its line, with an optional tag after a dot: `budget` is a 
 
 Claude can't see or rename chats, so whenever a chat's state changes, the skill suggests a new title for it. Renaming is optional: commands find handoff files by name, never by chat title.
 
-A title is a state word, a dot and the chat's name (line, or line and tag). The state comes first, so you can read it in the sidebar even when a long title is cut off. The words follow the commands you use:
+A working chat is titled by its name alone (line, or line and tag). Every other state puts a state word and a dot in front of the name, so you can read it in the sidebar even when a long title is cut off. The words follow the commands you use:
 
 | The chat is | After plain words | After dot style |
 |---|---|---|
-| Working, a master included | `todo.market-size.au` | `todo.market-size.au` |
-| Handed off: continuing in a new chat, or waiting for the master | `handedoff.market-size.au` | `pushed.market-size.au` |
+| Working, a master included | `market-size.au` | `market-size.au` |
+| Handed off: continuing in a new chat, or waiting for the master | `handed_off.market-size.au` | `pushed.market-size.au` |
 | Has work sent back to it | `returned.market-size.au` | `returned.market-size.au` |
 | Finished, folded into the master | `folded.market-size.au` | `merged.market-size.au` |
 | Finished: its work went out (sent, published, shipped) | `done.review` | `done.review` |
@@ -100,7 +100,7 @@ Old chats stay in the sidebar, so sooner or later you type something into one th
 
 > This chat was handed off as budget.pre on October 12; the work continues in budget.post. Run your instruction here anyway?
 >
-> **Stop** (recommended): nothing runs; go to todo.budget.post.
+> **Stop** (recommended): nothing runs; go to budget.post.
 > **Continue here, once**: runs it, and you'll be asked again next time.
 > **Reopen this chat**: runs it, and this chat takes the budget line back until its next handoff.
 

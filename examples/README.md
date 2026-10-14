@@ -32,7 +32,7 @@ You:     yes
 Claude:  Saved claude/Handoff - market-size.md.
          To continue: type "pickup market-size" as the first message of a new chat.
          To fold it into the report instead: type "fold market-size" in the report chat.
-         Optional: rename this chat handedoff.market-size, and title the new one todo.market-size.
+         Optional: rename this chat handed_off.market-size, and title the new one market-size.
 ```
 
 The skill asks for a chat's name only once, the first time it needs one; the rest of this walkthrough leaves that step out. The file it saved: [Handoff - market-size.md](claude/Handoff%20-%20market-size.md). About 200 words: where things stand, two items ready, two decisions, one open question, the next step, and what not to redo. In a new chat:
@@ -40,7 +40,7 @@ The skill asks for a chat's name only once, the first time it needs one; the res
 ```
 You:     pickup market-size.au
 Claude:  Picked up market-size: Canada and the UK sized, Australia half done. Nothing stale.
-         Optional: title this chat todo.market-size.au; if you haven't already, rename the old one handedoff.market-size.
+         Optional: title this chat market-size.au; if you haven't already, rename the old one handed_off.market-size.
          Next: sizing Australian generation.
 ```
 
@@ -142,7 +142,7 @@ folded.interviews
 folded.competitors
 folded.regulations
 folded.market-size.au
-handedoff.market-size
+handed_off.market-size
 ```
 
 Every chat says where it stands, if you renamed them as suggested. One chat is done, the rest are folded or handed off, and nothing is left waiting.
