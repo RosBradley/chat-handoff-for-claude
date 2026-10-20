@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.3 (in testing)
+
+- `handoff test2` on the `test` line asks whether you meant to rename the line or tag the chat `test.2`, instead of renaming straight away.
+- Handing off to another folder works in plain words ("handoff, and save it in ~/Projects/other", "pickup budget from ~/Projects/first"), as the setup guide already said; the skill now says so too. Between claude.ai Projects, it posts the handoff.
+- In Claude Code on the web, the skill offers to commit and push the handoff, since the next session starts from a fresh copy of the branch. In a git worktree, it says the file is saved in that worktree only.
+- In the Claude desktop app's Code tab, you can ask Claude to rename a session, and the skill uses its suggested title. Everywhere else, Claude still can't rename chats, and no app's docs say Claude can see a chat's title.
+- SKILL.md shows its version (`Version: 0.3.3`), so you can ask which one claude.ai has. The release job fails if it doesn't match plugin.json.
+
 ## 0.3.2 (October 19, 2026)
 
 - Names typed with spaces are joined with hyphens (`handoff market size` saves `market-size`), and the reply says what the name became. On an existing line, the last word is read as the tag (`market size au` on the `market-size` line is `market-size.au`). The README now says names have no spaces.

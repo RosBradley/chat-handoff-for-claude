@@ -17,7 +17,7 @@ The commands are the same everywhere, in plain words or dot style (`handoff` or 
 
 Along the way, the skill suggests a title for each chat: `handed_off.forest-density` for the old one, `forest-density` for the new one. Renaming is optional. Commands find handoffs by file name, never by chat title. You don't have to remember how: after a handoff, the reply lists the steps for your app, with the names filled in.
 
-**One name per piece of work.** A name is one word: letters, digits or hyphens. If you type spaces, the skill joins the words with hyphens (`handoff forest density` saves `forest-density`) and tells you the name it used. Every chat on that work shares one file, and `pickup forest-density` always gets the latest. Don't fold a number into the name: `handoff forest-density2` would rename the work.
+**One name per piece of work.** A name is one word: letters, digits or hyphens. If you type spaces, the skill joins the words with hyphens (`handoff forest density` saves `forest-density`) and tells you the name it used. Every chat on that work shares one file, and `pickup forest-density` always gets the latest. Don't fold a number into the name: `handoff forest-density2` would rename the work, so the skill asks first whether you meant the tag `forest-density.2`.
 
 **Tags are yours, and optional.** To tell chats on the same work apart, add a tag after a dot: `pickup forest-density.v2`. The skill never invents a tag. On work that already has a file, a last word typed with a space is read as the tag: `handoff forest density v2` gives `forest-density.v2`.
 
@@ -51,7 +51,7 @@ Along the way, the skill suggests a title for each chat: `handed_off.forest-dens
 | App | Start a new session | Rename it (optional) | Find an old one |
 |---|---|---|---|
 | Terminal | `/clear` (the old session is kept), or quit and run `claude` | `/rename forest-density` | `/resume` for a list, `claude --resume forest-density` (`-r`), or `claude --continue` (`-c`) for the latest |
-| Desktop app, Code tab | + New session, or Cmd+N | Click the title at the top of the session | The sidebar, which has search |
+| Desktop app, Code tab | + New session, or Cmd+N | Click the title at the top of the session, or ask Claude to rename it | The sidebar, which has search |
 | VS Code, Cursor and other forks | Command Palette: "Open in New Tab" or "Open in New Window" | "Rename Session Tab", or open Session history, hover over the session, then Rename | The Session history button at the top of the Claude panel |
 | JetBrains | The plugin runs the terminal version in the IDE's terminal, so use the terminal commands | Same as the terminal | Same as the terminal |
 

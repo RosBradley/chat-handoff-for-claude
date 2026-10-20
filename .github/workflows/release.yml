@@ -34,7 +34,9 @@ jobs:
           [ "${#description}" -le 1024 ] || fail "The description is ${#description} characters; claude.ai allows 1024."
           echo "$name" | grep -Eq '^[a-z0-9-]{1,64}$' || fail "The name must be 1 to 64 lowercase letters, digits or hyphens."
           case "$name" in *anthropic* | *claude*) fail "The name can't contain anthropic or claude." ;; esac
-          echo "SKILL.md passes: name $name, description ${#description} characters."
+          version="$(jq -r .version .claude-plugin/plugin.json)"
+          grep -qx "Version: $version" "$skill" || fail "SKILL.md's Version line doesn't say $version, the version in plugin.json."
+          echo "SKILL.md passes: name $name, version $version, description ${#description} characters."
 
       - name: Read the version
         id: version

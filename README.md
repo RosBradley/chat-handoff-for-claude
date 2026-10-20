@@ -26,7 +26,7 @@ Chains work too: research chats feed a report chat, and the report feeds a fresh
 
 Sources: Anthropic's help center, [How can I maximize my Claude Pro usage?](https://support.anthropic.com/en/articles/8325614-how-can-i-maximize-my-claude-pro-usage) ("Claude needs to re-read the entire conversation every time you send a message"), [Understanding usage and length limits](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Working with messages](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless").
 
-**Status:** v0.3.2, in testing.
+**Status:** v0.3.3, in testing.
 
 ## Commands
 
@@ -84,7 +84,7 @@ In Claude Code, a chat is a session: `/clear` starts a new one, and `/rename` re
 
 ## Chat titles
 
-Claude can't see or rename chats, so whenever a chat's state changes, the skill suggests a new title for it. Renaming is optional: commands find handoff files by name, never by chat title.
+Claude can't see chat titles and, in most apps, can't rename chats, so whenever a chat's state changes, the skill suggests a new title for it. Renaming is optional: commands find handoff files by name, never by chat title.
 
 A working chat is titled by its name alone (line, or line and tag). Every other state puts a state word and a dot in front of the name, so you can read it in the sidebar even when a long title is cut off. The words follow the commands you use:
 
@@ -175,7 +175,7 @@ Claude can suggest a handoff on its own at natural stopping points. Add this to 
 
 ## Limits
 
-- Claude can't see, close or rename chats. The skill suggests a title for each one, and renaming is optional (see Chat titles).
+- Claude can't see or close chats, and can rename one only in the Claude desktop app's Code tab, when you ask. The skill suggests a title for each one, and renaming is optional (see Chat titles).
 - Claude can't see how full a chat is or how much usage you have left, so `handoff?` is a judgment call, not a meter.
 - Chats in different claude.ai Projects can't see each other's files. Hand off within a project.
 - Without a Project or folder, `pickup` depends on past-chat search (it must be on in your claude.ai settings) finding the handoff. If it doesn't, the skill asks you to paste it.

@@ -5,6 +5,8 @@ description: "Carries a chat's work into a new chat, or reviews a side chat's wo
 
 # Chat Handoff
 
+Version: 0.3.3
+
 Claude re-reads the whole chat with every message, so a long chat uses up the user's limits faster, costs more on the API, answers more slowly, and near the length limit gets summarized or stopped. This skill doesn't move or copy a chat. It saves a short, deliberate handoff (decisions, open items, next step, what not to redo) that a fresh chat picks up, or it reviews a side chat's work item by item so a master chat folds in only what the user approves.
 
 ## Commands
@@ -38,6 +40,10 @@ Replies stay short, bottom line first.
 
 Several chats may run at once, so a chat writes only its own line's file. The one exception: a master marking items, setting the status or writing a receipt in a file it is folding in.
 
+**Another folder.** The user can name another folder in plain words ("handoff, and save it in ~/Projects/other", "pickup budget from ~/Projects/first"): for that command, use that folder's `handoffs/`. claude.ai Projects can't see each other's files, so between Projects, post the handoff (see "Without a file store").
+
+**When the file won't reach the next session.** In Claude Code on the web, every session starts from a fresh copy of the branch: after saving, offer to commit and push the handoff (`git add -f` if `handoffs/` is gitignored), or post it. In a git worktree, the file is saved in that worktree only: say so in the reply.
+
 **Names.** A chat's name is its line, with an optional tag after a dot: `budget` is a chat on the budget line; `budget.pre` is one the user chose to tag.
 
 - The line is the working name: one word of letters, digits or hyphens, with no spaces or dots (for example `research`, `budget`, `tax-harvest`). One file per line, `Handoff - <line>.md`, serves every chat on that line.
@@ -46,7 +52,7 @@ Several chats may run at once, so a chat writes only its own line's file. The on
 - Take the name from `handoff <name>`, from the pickup or fold that started this chat, or from an earlier handoff in it. If the chat has no name at all, the first time a command needs one, ask once, in one line, with a short line drawn from the chat's topic ("Use budget as this chat's handoff name? Reply yes or give another."), and use the answer. Never pick a name silently: Claude can't see chat titles.
 - Names match loosely: `pickup budget`, `pickup budget.pre` and one distinctive word all find the line's file. Order between chats on a line comes from the dates in the file, never from the tag.
 
-**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different tag on the same line is not a rename: it only sets or changes this chat's tag. A rename keeps this chat's tag unless the new name gives one (`handoff budget` in `research.pre` makes it `budget.pre`).
+**Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different tag on the same line is not a rename: it only sets or changes this chat's tag. A rename keeps this chat's tag unless the new name gives one (`handoff budget` in `research.pre` makes it `budget.pre`). When the new line is this chat's line with a number or letter run on (`handoff test2` on the `test` line), a tag was probably meant: ask in one line before renaming ("Rename the test line to test2, or tag this chat test.2?").
 
 1. Save the file under the new line, with its `# Handoff:` line changed to match.
 2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first.
@@ -54,7 +60,7 @@ Several chats may run at once, so a chat writes only its own line's file. The on
 
 Rename only this chat's own line. If the old file's status shows another chat already has it (`continuing in`, `folded into` or `merged into`), ask first, since that chat knows it by the old name. Without a file store, an earlier post can't be removed, so the new post's heading adds "(renamed from <old>)".
 
-**Chat titles.** Claude can't see or rename chats. Whenever a chat's state changes, suggest the title the user can rename it to, and say it's optional ("Optional: rename this chat handed_off.budget."). Commands find handoffs by file name, never by chat title, so everything works the same whether or not a chat is renamed.
+**Chat titles.** Claude can't see chat titles and, in most apps, can't rename chats. Whenever a chat's state changes, suggest the title the user can rename it to, and say it's optional ("Optional: rename this chat handed_off.budget."). Commands find handoffs by file name, never by chat title, so everything works the same whether or not a chat is renamed. In the Claude desktop app's Code tab, the user can ask Claude to rename the session; when they do, use the suggested title.
 
 A working chat, a master included, is titled by its name alone (line, or line and tag): `budget`, `budget.pre`. Every other state puts a state word and a dot in front of the name, so the state still shows when the sidebar cuts a long title off, and, as long as the user sticks to one command style, a search for it (`folded.`, say) finds every chat in that state. Where a state is named after a command, its word follows the style of the command just typed; the other states use the same word in both styles. Use the rules file's titles if it sets them; otherwise:
 
@@ -176,7 +182,7 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
      pickup budget
      /rename budget
      ```
-     To fold in, the last three lines become two: `/resume` (pick the master), then `fold budget`. These commands work in the terminal and JetBrains. When the session clearly runs elsewhere, give that app's way instead: in the desktop app's Code tab, + New session or Cmd+N, click the title to rename it, and find old sessions in the sidebar; in VS Code and its forks, the Command Palette's "Open in New Tab", then "Rename Session Tab", and the Session history button for old sessions.
+     To fold in, the last three lines become two: `/resume` (pick the master), then `fold budget`. These commands work in the terminal and JetBrains. When the session clearly runs elsewhere, give that app's way instead: in the desktop app's Code tab, + New session or Cmd+N, click the title to rename it (or ask Claude to), and find old sessions in the sidebar; in VS Code and its forks, the Command Palette's "Open in New Tab", then "Rename Session Tab", and the Session history button for old sessions.
    - **claude.ai:** "Start a new chat in this Project and type pickup budget" (without a Project, any new chat), or, to fold in, open the master chat in the sidebar. To rename a chat: hover over it in the sidebar, click ⋮, then Rename; on iPhone, touch and hold it in the chat list; on Android, open it and tap ⋮ at the top right.
 
    End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
