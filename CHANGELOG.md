@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.3 (in testing)
+## 0.3.3 (October 19, 2026)
 
 - `handoff test2` on the `test` line asks whether you meant to rename the line or tag the chat `test.2`, instead of renaming straight away.
 - Handing off to another folder works in plain words ("handoff, and save it in ~/Projects/other", "pickup budget from ~/Projects/first"), as the setup guide already said; the skill now says so too. Between claude.ai Projects, it posts the handoff.
