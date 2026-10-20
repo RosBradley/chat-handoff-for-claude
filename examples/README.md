@@ -17,6 +17,8 @@ interviews   ─┘
 
 The project's rules file is [templates/handoff-rules.md](../templates/handoff-rules.md). The handoff files are in [claude/](claude/), where they'd sit in the Project.
 
+The walkthrough uses plain words. Every command has a git-style twin (`.push?`, `.push`, `.pull`, `.merge`, `.status`), and the skill answers in whichever style you type; section 1 shows the same handoff both ways. After dot-style commands, the titles it suggests say `pushed` and `merged` where this walkthrough says `handed_off` and `folded`.
+
 ## 1. A long chat continues in a fresh one
 
 `market-size` has worked through a stack of industry reports and is getting slow. Canada and the UK are sized; Australia is half done.
@@ -37,6 +39,21 @@ Claude:  Saved claude/Handoff - market-size.md.
          chat, hover over it in the sidebar, click ⋮, then Rename.
 ```
 
+In dot style, with the name typed in the command so the skill doesn't need to ask:
+
+```
+You:     .push?
+Claude:  Yes. The chat is long, and Australian generation is a clean place to start fresh.
+
+You:     .push market-size
+Claude:  Saved claude/Handoff - market-size.md.
+         To continue: type ".pull market-size" as the first message of a new chat.
+         To fold it into the report instead: type ".merge market-size" in the report chat.
+         Optional: rename this chat pushed.market-size, and title the new one market-size.
+         How: start a new chat in this Project and type ".pull market-size". To rename a
+         chat, hover over it in the sidebar, click ⋮, then Rename.
+```
+
 The skill asks for a chat's name only once, the first time it needs one; the rest of this walkthrough leaves that step out. The file it saved: [Handoff - market-size.md](claude/Handoff%20-%20market-size.md). About 200 words: where things stand, two items ready, two decisions, one open question, the next step, and what not to redo. In a new chat:
 
 ```
@@ -46,7 +63,7 @@ Claude:  Picked up market-size: Canada and the UK sized, Australia half done. No
          Next: sizing Australian generation.
 ```
 
-The `au` tag is your choice, so the two chats on the line are easy to tell apart; `pickup market-size` alone would have worked too. It gets straight to work without rereading the old chat. Two days later Australia is done, the EU is sized as you asked, and `market-size.au` hands off for fold-in with four items, A to D. The letters carry on from the first chat: Canada is still A.
+The `au` tag is your choice, so the two chats on the line are easy to tell apart; `pickup market-size` (or `.pull market-size`) alone would have worked too. It gets straight to work without rereading the old chat. Two days later Australia is done, the EU is sized as you asked, and `market-size.au` hands off for fold-in with four items, A to D. The letters carry on from the first chat: Canada is still A.
 
 ## 2. The report chat catches a double count
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4 (in testing)
+
+- The setup guide, README and worked example show every command in both styles, plain words and dot style, including the terminal routine (`.push`, `/rename pushed.<name>`, `/clear`, `.pull`) and a dot-style version of the worked example's first handoff.
+
 ## 0.3.3 (October 19, 2026)
 
 - `handoff test2` on the `test` line asks whether you meant to rename the line or tag the chat `test.2`, instead of renaming straight away.

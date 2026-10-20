@@ -14,11 +14,11 @@ Starting a fresh chat avoids all three, but normally means explaining the work a
 
 ## What it does
 
-This skill doesn't move or copy a chat. It lets you pick up the conversation in a new chat, or fold a side chat's work into a main one, with short commands:
+This skill doesn't move or copy a chat. It lets you pick up the conversation in a new chat, or fold a side chat's work into a main one, with short commands, in plain words or git-style dot words (see Commands):
 
-- **`handoff`**: the skill writes a short handoff file, about 400 words: where the work stands, what was decided, what is still open, the next step, and what not to redo.
-- **`pickup <name>`**, as the first message of a new chat: the skill reads that file, and only the files it points to, and the new chat carries on from there.
-- **`fold <name>`**, in a main (master) chat that side chats feed into: the skill reviews the side chat's work as an independent second reviewer. It rechecks the figures against the current sources, looks for gaps and for conflicts with what is already settled, and gives each item a verdict (keep, change, toss, or return to the side chat for more work). Nothing is folded in until you approve.
+- **`handoff`** (`.push`): the skill writes a short handoff file, about 400 words: where the work stands, what was decided, what is still open, the next step, and what not to redo.
+- **`pickup <name>`** (`.pull <name>`), as the first message of a new chat: the skill reads that file, and only the files it points to, and the new chat carries on from there.
+- **`fold <name>`** (`.merge <name>`), in a main (master) chat that side chats feed into: the skill reviews the side chat's work as an independent second reviewer. It rechecks the figures against the current sources, looks for gaps and for conflicts with what is already settled, and gives each item a verdict (keep, change, toss, or return to the side chat for more work). Nothing is folded in until you approve.
 
 Chains work too: research chats feed a report chat, and the report feeds a fresh review chat that reads it the way your audience will.
 
@@ -42,20 +42,20 @@ Use plain words or the dot style, whichever you like:
 | `pickup` | `.pull` | In a chat with work sent back to it: starts on the returns. Anywhere else: lists what is waiting and asks |
 | `handoffs` | `.status` | Lists every handoff and its status |
 
-- A name has no spaces: `handoff market-size`, not `handoff market size`. If you type spaces anyway, the skill joins the words with hyphens and tells you the name it used (see Chat names).
-- Names match loosely: `pickup budget` and `pickup budget.pre` both find "Handoff - budget.md". If two match, the skill asks which.
+- A name has no spaces: `handoff market-size` (`.push market-size`), not `handoff market size`. If you type spaces anyway, the skill joins the words with hyphens and tells you the name it used (see Chat names).
+- Names match loosely: `pickup budget` and `.pull budget.pre` both find "Handoff - budget.md". If two match, the skill asks which.
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
 - Once a chat has been handed off or folded in, an ordinary instruction typed into it gets a warning before anything runs (see Stale chat guard). Handoff commands still work there.
-- A different line renames, and the chat keeps its tag: `handoff <new line>` saves the new file first, then deletes the old one, so nothing is left under the old name. A different tag on the same line (`handoff budget.post` in `budget.pre`) only changes the tag.
+- A different line renames, and the chat keeps its tag: `handoff <new line>` (`.push <new line>`) saves the new file first, then deletes the old one, so nothing is left under the old name. A different tag on the same line (`handoff budget.post` or `.push budget.post` in `budget.pre`) only changes the tag.
 
 ## Chat names
 
 Each chat is named by its line, with an optional tag after a dot: `budget` is a chat on the budget line; `budget.pre` is one you tagged.
 
 - The line is one word: letters, digits or hyphens, like `research` or `market-size`, with no spaces. One handoff file per line serves every chat on it.
-- Typed with spaces, a name is joined with hyphens: `handoff market size` saves `market-size`. On a line that already exists, the last word is read as your tag: `handoff market size au` on the `market-size` line gives `market-size.au`. The reply says the name it used, so you can change it.
-- The tag is yours, for telling chats on one line apart: a word, a letter, a number, whatever suits you (`budget.pre`, `budget.B`, `budget.2`). The skill never invents one and never asks for one. Give a new chat its tag in the pickup command (`pickup budget.post`), or any time with `handoff budget.post`.
+- Typed with spaces, a name is joined with hyphens: `handoff market size` (or `.push market size`) saves `market-size`. On a line that already exists, the last word is read as your tag: `handoff market size au` on the `market-size` line gives `market-size.au`. The reply says the name it used, so you can change it.
+- The tag is yours, for telling chats on one line apart: a word, a letter, a number, whatever suits you (`budget.pre`, `budget.B`, `budget.2`). The skill never invents one and never asks for one. Give a new chat its tag in the pickup command (`pickup budget.post` or `.pull budget.post`), or any time with `handoff budget.post` (`.push budget.post`).
 - Order between chats on a line comes from the dates in the handoff file, not from the tag, so untagged chats work fine.
 - Claude can't see chat titles, so a chat's name comes from your command or the handoff file. If the chat has no name yet, the skill asks once.
 
@@ -65,13 +65,13 @@ In Claude Code, a chat is a session: `/clear` starts a new one, and `/rename` re
 
 ### Continue in a fresh chat
 
-1. In the long chat, type `handoff`. The skill saves a short file (about 400 words at most) with only the work in progress: where it stands, decisions not yet recorded elsewhere, what's open, the next step, which files to read, and what not to redo. The reply ends with the steps for your app, with the names filled in: in Claude Code, `/rename`, `/clear`, `pickup` and `/rename` again; in claude.ai, where to click.
-2. Start a new chat and type `pickup <name>`. The skill reads the file, flags anything that has changed since, and starts on the next step.
+1. In the long chat, type `handoff` (or `.push`). The skill saves a short file (about 400 words at most) with only the work in progress: where it stands, decisions not yet recorded elsewhere, what's open, the next step, which files to read, and what not to redo. The reply ends with the steps for your app, with the names filled in: in Claude Code, `/rename`, `/clear`, `pickup` (or `.pull`) and `/rename` again; in claude.ai, where to click.
+2. Start a new chat and type `pickup <name>` (or `.pull <name>`). The skill reads the file, flags anything that has changed since, and starts on the next step.
 
 ### Fold a side chat into a master chat
 
-1. In the side chat, type `handoff`.
-2. In the master chat, type `fold <name>`. The skill reviews every incoming item: it checks the numbers, looks for conflicts with decisions already made, and flags anything missing or out of date. High-stakes items get a second, harder pass: the figures are worked out again from the sources, and the strongest case against each one is made.
+1. In the side chat, type `handoff` (or `.push`).
+2. In the master chat, type `fold <name>` (or `.merge <name>`). The skill reviews every incoming item: it checks the numbers, looks for conflicts with decisions already made, and flags anything missing or out of date. High-stakes items get a second, harder pass: the figures are worked out again from the sources, and the strongest case against each one is made.
 3. You get one verdict per item:
    ```
    A. Canada, $310M a year: Change to $250M; compliance and OT security overlap, counted twice
@@ -80,7 +80,7 @@ In Claude Code, a chat is a session: `/clear` starts a new one, and `/rename` re
    D. EU, $600M a year: Toss, the newer board brief drops the EU
    ```
 4. You decide, usually in one line: "change A, keep B, return C, toss D."
-5. Only then is anything applied. The skill marks each item in the side chat's file with its verdict, so nothing gets reviewed twice. Returned items go back to the side chat: type `pickup` there, or `pickup <name>` as the first message of a new chat. Once everything is settled, the side chat's file shrinks to a short receipt, and tossed items stay in it with their reason so they don't come back.
+5. Only then is anything applied. The skill marks each item in the side chat's file with its verdict, so nothing gets reviewed twice. Returned items go back to the side chat: type `pickup` (`.pull`) there, or `pickup <name>` (`.pull <name>`) as the first message of a new chat. Once everything is settled, the side chat's file shrinks to a short receipt, and tossed items stay in it with their reason so they don't come back.
 
 ## Chat titles
 
@@ -171,14 +171,14 @@ If the skill is also turned on in your claude.ai account, Claude Code loads that
 
 Claude can suggest a handoff on its own at natural stopping points. Add this to **Settings > Instructions for Claude** (or to `CLAUDE.md` in Claude Code):
 
-> In long chats, at natural stopping points (a deliverable finished, a question settled, a long stretch of file work), suggest typing "handoff" in one short line at the end of the reply. Don't repeat it if I ignore it.
+> In long chats, at natural stopping points (a deliverable finished, a question settled, a long stretch of file work), suggest typing "handoff" (or ".push", if I use dot-style commands) in one short line at the end of the reply. Don't repeat it if I ignore it.
 
 ## Limits
 
 - Claude can't see or close chats, and can rename one only in the Claude desktop app's Code tab, when you ask. The skill suggests a title for each one, and renaming is optional (see Chat titles).
-- Claude can't see how full a chat is or how much usage you have left, so `handoff?` is a judgment call, not a meter.
+- Claude can't see how full a chat is or how much usage you have left, so `handoff?` (`.push?`) is a judgment call, not a meter.
 - Chats in different claude.ai Projects can't see each other's files. Hand off within a project.
-- Without a Project or folder, `pickup` depends on past-chat search (it must be on in your claude.ai settings) finding the handoff. If it doesn't, the skill asks you to paste it.
+- Without a Project or folder, `pickup` (`.pull`) depends on past-chat search (it must be on in your claude.ai settings) finding the handoff. If it doesn't, the skill asks you to paste it.
 
 ## License
 
