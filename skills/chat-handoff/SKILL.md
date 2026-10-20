@@ -106,9 +106,9 @@ A chat that has been handed off or folded in is finished; its work lives in anot
 
 - an earlier message in this chat ran `handoff` (`.push`), and nothing since reopened it (see choice 3 below);
 - the line's file status says this chat's work moved on: `continuing in`, `folded into`, `merged into` or `done`;
-- the line's file was written by another chat on the line after this chat's last handoff (its `From` line names a different tag, or a later date, than this chat's own last handoff), so this chat is behind.
+- the line's file was written by another chat on the line after this chat's last handoff or pickup (its `From` line has changed since this chat wrote or read it), so this chat is behind.
 
-**What triggers it.** Any message that is not a handoff command and not a bare acknowledgment (thanks, ok, got it). Commands always run: `handoff` again in a stale chat updates the file, `handoffs` lists, and so on.
+**What triggers it.** Any message that is not a handoff command and not a bare acknowledgment (thanks, ok, got it). Commands always run: `handoff` again in a stale chat updates the file (asking first if another chat has the line now; see "`handoff`"), `handoffs` lists, and so on.
 
 **What this skill does.** Don't act on the message. Read the line's file for the current status, then ask. Two lines, then the choices: the first line says this chat is handed off and where the work is now ("This chat was handed off as budget.pre on October 12; the work continues in budget.post."); the second asks whether to run the instruction here anyway. Offer the choices as buttons when the chat can show them (the AskUserQuestion tool); otherwise end with "Reply stop, continue or reopen."
 
@@ -122,7 +122,15 @@ Never run the instruction before the user answers, and never let the warning swa
 
 ## `handoff` (`.push`)
 
-1. Settle the name (see "Names" and "Renaming"). Read the rules file, and the line's current file if one exists. From it, carry forward:
+1. Settle the name (see "Names" and "Renaming"). Read the rules file, and the line's current file if one exists.
+
+   **Another chat has the line.** If the file shows another chat has the line now (a `continuing in` status this chat didn't set, or a `From` line that has changed since this chat's own pickup or last handoff), saving would replace that chat's handoff. Ask before drafting anything: one line says which chat has the line and since when ("budget.post picked this line up on October 12; saving here would replace its handoff."), then the choices, as buttons when the chat can show them (the AskUserQuestion tool):
+
+   1. **Stop** (recommended, first in the list). Save nothing. Reply with the chat that has the line, by its name ("Hand off from budget.post instead").
+   2. **Add to it.** Keep that chat's file as it is, status and `From` line included, and add only this chat's new work, as items under "Ready to fold in" with the next letters, each marked "(from <this chat's name>, <date>)". Step 1's carry-forward keeps them in that chat's next handoff. Say so, and that this chat stays stale.
+   3. **Replace it.** Save as usual: this chat takes the line back, with status `waiting`. Say that the other chat is now behind (its guard will warn there), and that anything it hasn't handed off lives only in that chat.
+
+   From the file, carry forward:
    - items not yet settled, with their letters (a reworked item drops its Returned mark);
    - every tossed or rejected item, into "Don't redo" with its reason, so it doesn't come back;
    - settled items as one "Don't redo" line, for example "A changed and B kept, into the report draft, September 12, 2026".
@@ -159,7 +167,19 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
 3. Leave out background, history and reasoning already recorded in project files or memory.
 4. **Cold read.** Before saving, read the draft as a fresh chat would, with only this file and its "Read first" files. Could it take the next step without asking anything? If not, add what's missing, within the length limit.
 5. Save it. In a Project, `project_write` overwrites the line's file, with `present_to_user: true`. For a rename, delete the old file now (see "Renaming").
-6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handed_off.<name>` (`pushed.<name>` after `.push`), and, if continuing, the new chat `<line>` (the user can add a tag of their own when they pick it up). For example: "Optional: rename this chat handed_off.budget, and title the new one budget." End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
+6. Tell the user, in four lines or fewer, in the style they just used: saved (and renamed from what, if it was a rename); what to type next (`pickup <line>` or `.pull <line>` as the first message of a new chat to continue; `fold <line>` or `.merge <line>` in the master to fold it in); and the optional titles: this chat `handed_off.<name>` (`pushed.<name>` after `.push`), and, if continuing, the new chat `<line>` (the user can add a tag of their own when they pick it up). For example: "Optional: rename this chat handed_off.budget, and title the new one budget."
+7. **How to do it.** People forget how their app starts, renames and finds chats, so after those lines give the steps for the app this chat runs in, with the real names and titles filled in, in the style just used (after `.push`: `/rename pushed.budget`, `.pull budget`). Give the steps for what comes next: continuing in a new chat, or folding into the master.
+   - **Claude Code:** a code block to type line by line, then one line on getting back to old sessions: "`/clear` keeps this session; `/resume` lists old ones, or run `claude --resume budget` in Terminal." To continue:
+     ```
+     /rename handed_off.budget
+     /clear
+     pickup budget
+     /rename budget
+     ```
+     To fold in, the last three lines become two: `/resume` (pick the master), then `fold budget`. These commands work in the terminal and JetBrains. When the session clearly runs elsewhere, give that app's way instead: in the desktop app's Code tab, + New session or Cmd+N, click the title to rename it, and find old sessions in the sidebar; in VS Code and its forks, the Command Palette's "Open in New Tab", then "Rename Session Tab", and the Session history button for old sessions.
+   - **claude.ai:** "Start a new chat in this Project and type pickup budget" (without a Project, any new chat), or, to fold in, open the master chat in the sidebar. To rename a chat: hover over it in the sidebar, click ⋮, then Rename; on iPhone, touch and hold it in the chat list; on Android, open it and tap ⋮ at the top right.
+
+   End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
 
 ## `handoff?` (`.push?`)
 

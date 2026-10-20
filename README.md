@@ -26,7 +26,7 @@ Chains work too: research chats feed a report chat, and the report feeds a fresh
 
 Sources: Anthropic's help center, [How can I maximize my Claude Pro usage?](https://support.anthropic.com/en/articles/8325614-how-can-i-maximize-my-claude-pro-usage) ("Claude needs to re-read the entire conversation every time you send a message"), [Understanding usage and length limits](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Working with messages](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless").
 
-**Status:** v0.3.1, in testing.
+**Status:** v0.3.2, in testing.
 
 ## Commands
 
@@ -61,9 +61,11 @@ Each chat is named by its line, with an optional tag after a dot: `budget` is a 
 
 ## How it works
 
+In Claude Code, a chat is a session: `/clear` starts a new one, and `/rename` renames it. Step-by-step instructions for each app (claude.ai on the web, desktop and mobile; Claude Code in the terminal, desktop app, VS Code and JetBrains) are in [docs/setup.md](docs/setup.md).
+
 ### Continue in a fresh chat
 
-1. In the long chat, type `handoff`. The skill saves a short file (about 400 words at most) with only the work in progress: where it stands, decisions not yet recorded elsewhere, what's open, the next step, which files to read, and what not to redo.
+1. In the long chat, type `handoff`. The skill saves a short file (about 400 words at most) with only the work in progress: where it stands, decisions not yet recorded elsewhere, what's open, the next step, which files to read, and what not to redo. The reply ends with the steps for your app, with the names filled in: in Claude Code, `/rename`, `/clear`, `pickup` and `/rename` again; in claude.ai, where to click.
 2. Start a new chat and type `pickup <name>`. The skill reads the file, flags anything that has changed since, and starts on the next step.
 
 ### Fold a side chat into a master chat
@@ -106,7 +108,7 @@ Old chats stay in the sidebar, so sooner or later you type something into one th
 > **Continue here, once**: runs it, and you'll be asked again next time.
 > **Reopen this chat**: runs it, and this chat takes the budget line back until its next handoff.
 
-A chat counts as handed off when `handoff` or `.push` ran in it, when its line's file says the work moved on (`continuing in`, `folded into`, `merged into` or `done`), or when another chat on the same line has since written the file. Handoff commands always run, so `handoff` again in an old chat just brings the file up to date. Every `handoff` reply ends by saying the guard is on, so the warning never comes as a surprise.
+A chat counts as handed off when `handoff` or `.push` ran in it, when its line's file says the work moved on (`continuing in`, `folded into`, `merged into` or `done`), or when another chat on the same line has since written the file. Handoff commands always run, so `handoff` again in an old chat brings the file up to date, but if another chat has picked the line up or handed it off since, it asks first: saving would replace that chat's handoff. Every `handoff` reply ends by saying the guard is on, so the warning never comes as a surprise.
 
 ## Where the files live
 
@@ -129,6 +131,8 @@ Each project can have a rules file that says which chats fold into which, where 
 [examples/README.md](examples/README.md) follows one project from start to finish: a firm that does NERC CIP compliance and OT cybersecurity for utilities, deciding which countries to expand into. Four research lines feed a report chat, and the report goes to a fresh reviewer. It shows a long chat continuing in a new one, a double count caught at fold-in, work sent back, a receipt, and the handoff files at each stage.
 
 ## Install
+
+How to start, rename and find chats in each app, and the cases where a handoff file doesn't reach the next chat: [docs/setup.md](docs/setup.md).
 
 ### claude.ai (web, desktop and mobile)
 

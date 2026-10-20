@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.3.2 (in testing)
+## 0.3.2 (October 19, 2026)
 
 - Names typed with spaces are joined with hyphens (`handoff market size` saves `market-size`), and the reply says what the name became. On an existing line, the last word is read as the tag (`market size au` on the `market-size` line is `market-size.au`). The README now says names have no spaces.
+- New setup guide, [docs/setup.md](docs/setup.md): how to start, rename and find chats in each Claude app (claude.ai on the web, desktop and mobile; Claude Code in the terminal, desktop app, VS Code and JetBrains), what Status means, and the cases where a handoff file doesn't reach the next session (Claude Code on the web, worktrees). It states only what the official docs confirm. The README says that in Claude Code a chat is a session, and links the guide.
+- After a handoff, the reply ends with the steps for the app the chat runs in, with the names filled in, so nobody has to remember how to start, rename or find chats. In Claude Code: `/rename`, `/clear`, `pickup` and `/rename` (or `/resume` and `fold` to fold in), and how to get back to an old session; the desktop app's and VS Code's own ways when the session clearly runs there. In claude.ai: where to start the new chat and how to rename one on the web, desktop and mobile.
+- `handoff` in an old chat asks before saving when another chat has picked the line up or handed it off since, instead of replacing that chat's handoff. The choices are Stop (recommended), Add to it (this chat's new work joins the file as new items, and the other chat keeps the line) and Replace it. In testing, an old session's `.push` set a line back to `waiting` after a newer session had picked it up. A chat that picked a line up also now counts as behind (see Stale chat guard) when another chat writes the file after its pickup.
+- The release job checks SKILL.md's name and description against claude.ai's upload rules (no angle brackets, at most 1024 characters, a lowercase name) before it builds the zip, so a release claude.ai would reject fails first.
 
 ## 0.3.1 (October 14, 2026)
 

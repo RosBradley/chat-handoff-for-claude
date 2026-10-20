@@ -33,6 +33,8 @@ Claude:  Saved claude/Handoff - market-size.md.
          To continue: type "pickup market-size" as the first message of a new chat.
          To fold it into the report instead: type "fold market-size" in the report chat.
          Optional: rename this chat handed_off.market-size, and title the new one market-size.
+         How: start a new chat in this Project and type "pickup market-size". To rename a
+         chat, hover over it in the sidebar, click ⋮, then Rename.
 ```
 
 The skill asks for a chat's name only once, the first time it needs one; the rest of this walkthrough leaves that step out. The file it saved: [Handoff - market-size.md](claude/Handoff%20-%20market-size.md). About 200 words: where things stand, two items ready, two decisions, one open question, the next step, and what not to redo. In a new chat:

@@ -21,6 +21,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # claude.ai rejects an upload whose name or description breaks these rules,
+      # so check them here instead of finding out after the release is out.
+      - name: Check SKILL.md against claude.ai's upload rules
+        run: |
+          skill=skills/chat-handoff/SKILL.md
+          name="$(sed -n 's/^name: *//p' "$skill" | head -n 1)"
+          description="$(sed -n 's/^description: *"\(.*\)"$/\1/p' "$skill" | head -n 1)"
+          fail() { echo "::error file=$skill::$1"; exit 1; }
+          [ -n "$description" ] || fail "No quoted description found in the frontmatter."
+          case "$description" in *'<'* | *'>'*) fail "The description has < or >, which claude.ai rejects." ;; esac
+          [ "${#description}" -le 1024 ] || fail "The description is ${#description} characters; claude.ai allows 1024."
+          echo "$name" | grep -Eq '^[a-z0-9-]{1,64}$' || fail "The name must be 1 to 64 lowercase letters, digits or hyphens."
+          case "$name" in *anthropic* | *claude*) fail "The name can't contain anthropic or claude." ;; esac
+          echo "SKILL.md passes: name $name, description ${#description} characters."
+
       - name: Read the version
         id: version
         run: echo "tag=v$(jq -r .version .claude-plugin/plugin.json)" >> "$GITHUB_OUTPUT"
