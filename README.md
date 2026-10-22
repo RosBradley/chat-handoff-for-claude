@@ -6,9 +6,9 @@ Chat Handoff is a skill for Claude that lets a new chat pick up where a long one
 
 Claude re-reads the entire chat every time you send a message. So the longer a chat runs, the more each new message costs, even a one-line "thanks":
 
-- **Usage and dollars.** On a Claude plan, usage limits are based on the length of the whole chat, not just the number of messages, so a long chat uses up your limit faster. On the API, the full history is sent, and billed, with every request.
+- **Usage and dollars.** On a Claude plan, usage limits are based on the length of the whole chat, not just the number of messages, so a long chat uses up your limit faster. On the API, the full history is sent, and billed, with every request (at a lower rate for any part served from the prompt cache).
 - **Speed.** Claude answers shorter chats faster.
-- **Detail.** Near a chat's length limit, the app either summarizes older messages on its own, choosing what to keep, or stops the chat.
+- **Detail.** Near a chat's length limit, the app either summarizes older messages on its own (on paid plans with code execution on), choosing what goes into the summary, or stops the chat.
 
 Starting a fresh chat avoids all three, but normally means explaining the work all over again. This skill removes that step.
 
@@ -22,9 +22,9 @@ This skill doesn't move or copy a chat. It lets you pick up the conversation in 
 
 Chains work too: research chats feed a report chat, and the report feeds a fresh review chat that reads it the way your audience will.
 
-**How it saves.** A chat picked up from a handoff carries the handoff and the files it opens, not the old chat's back-and-forth, so each message costs far less. For example, once a chat has grown to 150,000 tokens, every message makes Claude re-read all 150,000; the new chat starts from a 400-word handoff instead. Side chats do the same for a main chat: the heavy work happens elsewhere, and only the reviewed results come back. And what carries forward is a deliberate handoff (decisions, open items, next step, what not to redo), not an automatic summary.
+**How it saves.** A chat picked up from a handoff carries the handoff and the files it opens, not the old chat's back-and-forth, so each message costs far less. For example, once a chat has grown to 150,000 tokens, every message sends all 150,000 back to Claude. Prompt caching can make the repeated part cheaper, but it still counts toward your usage and fills the context window. The new chat starts from a 400-word handoff instead. Side chats do the same for a main chat: the heavy work happens elsewhere, and only the reviewed results come back. And what carries forward is a deliberate handoff (decisions, open items, next step, what not to redo), not an automatic summary.
 
-Sources: Anthropic's help center, [How can I maximize my Claude Pro usage?](https://support.anthropic.com/en/articles/8325614-how-can-i-maximize-my-claude-pro-usage) ("Claude needs to re-read the entire conversation every time you send a message"), [Understanding usage and length limits](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Working with messages](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless").
+Sources (checked October 22, 2026): Anthropic's help center, [What is the Pro plan?](https://support.claude.com/en/articles/8325606-what-is-the-pro-plan) ("The number of messages you can send will vary based on message length, including the length of files you attach, the length of your current conversation, and the model or feature you use"), [Models, usage, and limits in Claude Code](https://support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code) ("Every previous message is resent on every turn"), [How do usage and length limits work?](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Using the Messages API](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless") and [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
 **Status:** v0.3.4, in testing.
 
