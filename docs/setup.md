@@ -106,11 +106,15 @@ In claude.ai, Projects can't see each other's files, so hand off within a Projec
 ## Other apps
 
 - **The Excel, PowerPoint, Word and Outlook add-ins:** skills turned on in your Claude settings apply during cross-app tasks, and Claude works only with files open in the app. A handoff file may not carry over between sessions, so copy and paste it (see below).
-- **Xcode** (Claude Agent, in Xcode 26.3) and **Microsoft 365 Copilot:** the official docs don't yet say whether skills run there. Copy and paste the handoff.
+- **Microsoft Copilot** (formerly Microsoft 365 Copilot):
+  - **Copilot Chat** can use Claude as its model, if your IT admin allows it, but it isn't the Claude app: your claude.ai skills, Projects and past-chat search aren't there. Copy and paste the handoff.
+  - **Copilot Cowork**, the agent in the same app (switch from Chat to Cowork at the top), takes skills in the same `SKILL.md` format, and you can share a skill with people in your organization. To try Chat Handoff there, open [`skills/chat-handoff/SKILL.md`](../skills/chat-handoff/SKILL.md) on GitHub and click **Download raw file**. Then, in Cowork, open **Customize**, the **Skills** tab, the arrow next to **Add**, then **Upload skill**, and choose that file. Don't upload `chat-handoff.zip`: Cowork wants `SKILL.md` at the top of a zip, and this zip is laid out for claude.ai. Chat Handoff hasn't been tested in Cowork yet, and it's written for Claude's apps, so if the handoff doesn't reach the next session, ask for it to be posted and paste it. Cowork needs a Microsoft 365 Copilot license, and your IT admin has to give you access.
+  - **Agent Builder**, for building your own Copilot agents, takes skills too, but caps a skill's instructions at 20,000 characters. Chat Handoff's are longer, so it doesn't fit.
+- **Xcode** (Claude Agent, in Xcode 26.3): the official docs don't yet say whether skills run there. Copy and paste the handoff.
 
 **Anywhere, as a last resort:** say "handoff, and post it here" (or ".push, and post it here"), copy what the skill posts, and paste it into the new chat after `pickup` (`.pull`).
 
-## Sources (checked October 11, 2026)
+## Sources (checked October 11, 2026; Microsoft Copilot, October 22, 2026)
 
 - Claude Code sessions: https://code.claude.com/docs/en/sessions
 - Claude Code skills: https://code.claude.com/docs/en/skills
@@ -123,3 +127,6 @@ In claude.ai, Projects can't see each other's files, so hand off within a Projec
 - Projects: https://support.claude.com/en/articles/9517075-what-are-projects
 - Xcode: https://www.anthropic.com/news/apple-xcode-claude-agent-sdk
 - Office add-ins: https://claude.com/docs/office-agents/overview.md and https://claude.com/docs/office-agents/connectors-and-skills.md
+- Claude in Microsoft Copilot: https://learn.microsoft.com/microsoft-365/copilot/release-notes (June 16, 2026) and https://learn.microsoft.com/microsoft-365/copilot/connect-to-ai-subprocessor
+- Copilot Cowork and its skills: https://learn.microsoft.com/microsoft-365/copilot/cowork/get-started and https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-customize
+- Agent Builder skills: https://learn.microsoft.com/microsoft-365/copilot/extensibility/agent-builder-add-skills
