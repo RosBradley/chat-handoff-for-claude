@@ -165,7 +165,7 @@ Then type `handoff` (or `.push`), or run it directly with `/chat-handoff:chat-ha
 
 To install without the plugin system, copy `skills/chat-handoff/` to `~/.claude/skills/chat-handoff/` (all your projects) or `.claude/skills/chat-handoff/` (one repository).
 
-If the skill is also turned on in your claude.ai account, Claude Code loads that copy too (as `anthropic-skills:chat-handoff`). Keep one of them on, so you know which version answers.
+If you sign in to Claude Code with your claude.ai account and the skill is turned on there, Claude Code loads that copy too (as `anthropic-skills:chat-handoff`). Keep one of them on, so you know which version answers. In Claude Code on the web, the plugin doesn't load, so turn the skill on in your claude.ai account instead (see [docs/setup.md](docs/setup.md)).
 
 ## Optional: a nudge
 
@@ -175,7 +175,7 @@ Claude can suggest a handoff on its own at natural stopping points. Add this to 
 
 ## Limits
 
-- Claude can't see or close chats, and can rename one only in the Claude desktop app's Code tab, when you ask. The skill suggests a title for each one, and renaming is optional (see Chat titles).
+- Claude can't see the title of the chat it's in. In most apps it can't list, rename or close chats; the exception is the Claude desktop app's Code tab, where Claude can list your other sessions and, when you ask, rename or archive one. The skill suggests a title for each one, and renaming is optional (see Chat titles).
 - Claude can't see how full a chat is or how much usage you have left, so `handoff?` (`.push?`) is a judgment call, not a meter.
 - Chats in different claude.ai Projects can't see each other's files. Hand off within a project.
 - Without a Project or folder, `pickup` (`.pull`) depends on past-chat search (it must be on in your claude.ai settings) finding the handoff. If it doesn't, the skill asks you to paste it.

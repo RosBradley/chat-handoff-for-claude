@@ -64,7 +64,7 @@ Along the way, the skill suggests a title for each chat: `handed_off.forest-dens
 | App | Start a new session | Rename it (optional) | Find an old one |
 |---|---|---|---|
 | Terminal | `/clear` (the old session is kept), or quit and run `claude` | `/rename forest-density` | `/resume` for a list, `claude --resume forest-density` (`-r`), or `claude --continue` (`-c`) for the latest |
-| Desktop app, Code tab | + New session, or Cmd+N | Click the title at the top of the session, or ask Claude to rename it | The sidebar, which has search |
+| Desktop app, Code tab | + New in the sidebar, or Cmd+N (Ctrl+N on Windows) | Click the title at the top of the session, or ask Claude to rename it | The sidebar's session list: hover over a heading for the Group and sort icon, or choose View all, then Archived, for archived sessions |
 | VS Code, Cursor and other forks | Command Palette: "Open in New Tab" or "Open in New Window" | "Rename Session Tab", or open Session history, hover over the session, then Rename | The Session history button at the top of the Claude panel |
 | JetBrains | The plugin runs the terminal version in the IDE's terminal, so use the terminal commands | Same as the terminal | Same as the terminal |
 
@@ -90,8 +90,8 @@ In dot style:
 
 **Two cases where the file doesn't reach the next session:**
 
-- **Claude Code on the web** (claude.ai/code). Every session starts from a fresh copy of your GitHub branch, not your local folder, so uncommitted files and anything in `.gitignore` aren't there. Ask Claude to commit and push the handoff ("handoff, and commit and push it", or ".push, and commit and push it"; if `handoffs/` is in `.gitignore`, that takes `git add -f`), then start the new session on that branch. Or post the handoff and paste it. `/rename` works there, but `/clear` and `/resume` don't.
-- **Worktrees**, such as the desktop app's worktree option. Each worktree is a separate copy of the project, so a handoff saved in one isn't in another. Start sessions that hand off to each other without a worktree, or add a `.worktreeinclude` file containing `handoffs/**` to the project. That copies handoffs into a new worktree when it's created, but not afterwards. Removing a worktree deletes its folder, along with any handoff saved only there.
+- **Claude Code on the web** (claude.ai/code). Every session starts from a fresh copy of your GitHub branch, not your local folder, so uncommitted files and anything in `.gitignore` aren't there. Ask Claude to commit and push the handoff ("handoff, and commit and push it", or ".push, and commit and push it"; if `handoffs/` is in `.gitignore`, that takes `git add -f`), then start the new session on that branch. Or post the handoff and paste it. `/rename` works there, but `/clear` and `/resume` don't. The plugin and a copy in `~/.claude/skills/` don't load there either: turn the skill on in your claude.ai account (cloud sessions load those), or commit `.claude/skills/chat-handoff/` to the repository.
+- **Worktrees**, such as the desktop app's worktree option. Each worktree is a separate copy of the project, so a handoff saved in one isn't in another. Start sessions that hand off to each other without a worktree, or add `handoffs/` to `.gitignore` and a `.worktreeinclude` file containing `handoffs/**` to the project. Together they copy handoffs into a new worktree when it's created, but not afterwards. `.worktreeinclude` copies only gitignored files, so without the `.gitignore` line nothing is copied. Removing a worktree deletes its folder, along with any handoff saved only there.
 
 ## Handing off to another project folder
 
@@ -121,7 +121,8 @@ In claude.ai, Projects can't see each other's files, so hand off within a Projec
 - Desktop app: https://code.claude.com/docs/en/desktop
 - VS Code: https://code.claude.com/docs/en/vs-code
 - JetBrains: https://code.claude.com/docs/en/jetbrains
-- Claude Code on the web: https://code.claude.com/docs/en/cloud-environments
+- Claude Code on the web: https://code.claude.com/docs/en/cloud-environments and https://code.claude.com/docs/en/claude-code-on-the-web
+- Worktrees: https://code.claude.com/docs/en/worktrees
 - Skills in claude.ai: https://support.claude.com/en/articles/12512180-use-skills-in-claude
 - Renaming chats: https://support.claude.com/en/articles/8230524-delete-or-rename-a-conversation
 - Projects: https://support.claude.com/en/articles/9517075-what-are-projects

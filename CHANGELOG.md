@@ -3,6 +3,7 @@
 ## 0.3.5 (in testing)
 
 - The setup guide's Microsoft Copilot note is up to date. It said Microsoft's docs didn't say whether skills run in Copilot; they do now. Copilot Chat can use Claude but isn't the Claude app. Copilot Cowork takes skills in the same `SKILL.md` format, and the guide gives the steps to try Chat Handoff there (upload `SKILL.md` itself, not the zip, which is laid out for claude.ai). Agent Builder caps a skill's instructions at 20,000 characters, too few for Chat Handoff.
+- The Claude Code claims are checked against the current docs. Fixed: `.worktreeinclude` copies handoffs into a new worktree only when `handoffs/` is also in `.gitignore`; in the desktop app's Code tab, Claude can list your other sessions and rename or archive one when you ask; the desktop app's new-session button is + New (Cmd+N, or Ctrl+N on Windows), and old sessions are found with the sidebar's Group and sort icon. New: in Claude Code on the web, the plugin doesn't load, so turn the skill on in your claude.ai account.
 - The README's Why section is checked against Anthropic's current pages. The "maximize your Pro usage" source is gone from the help center, so it's replaced with current ones; two link titles are updated; the 150,000-token example now says prompt caching can make the repeated part cheaper; and summarizing near the length limit is noted as happening on paid plans with code execution on.
 
 ## 0.3.4 (October 22, 2026)

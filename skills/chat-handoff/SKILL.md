@@ -182,7 +182,7 @@ Anything checked, rejected, tossed or settled, one line each, with the reason.
      pickup budget
      /rename budget
      ```
-     To fold in, the last three lines become two: `/resume` (pick the master), then `fold budget`. These commands work in the terminal and JetBrains. When the session clearly runs elsewhere, give that app's way instead: in the desktop app's Code tab, + New session or Cmd+N, click the title to rename it (or ask Claude to), and find old sessions in the sidebar; in VS Code and its forks, the Command Palette's "Open in New Tab", then "Rename Session Tab", and the Session history button for old sessions.
+     To fold in, the last three lines become two: `/resume` (pick the master), then `fold budget`. These commands work in the terminal and JetBrains. When the session clearly runs elsewhere, give that app's way instead: in the desktop app's Code tab, + New in the sidebar or Cmd+N (Ctrl+N on Windows), click the title to rename it (or ask Claude to), and find old sessions in the sidebar; in VS Code and its forks, the Command Palette's "Open in New Tab", then "Rename Session Tab", and the Session history button for old sessions.
    - **claude.ai:** "Start a new chat in this Project and type pickup budget" (without a Project, any new chat), or, to fold in, open the master chat in the sidebar. To rename a chat: hover over it in the sidebar, click ⋮, then Rename; on iPhone, touch and hold it in the chat list; on Android, open it and tap ⋮ at the top right.
 
    End with one short line saying this chat is now guarded: a new instruction typed here gets a warning first (see "Stale chat guard").
