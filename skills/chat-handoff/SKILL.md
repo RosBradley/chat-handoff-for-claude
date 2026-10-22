@@ -5,7 +5,7 @@ description: "Carries a chat's work into a new chat, or reviews a side chat's wo
 
 # Chat Handoff
 
-Version: 0.3.4
+Version: 0.3.5
 
 Claude re-reads the whole chat with every message, so a long chat uses up the user's limits faster, costs more on the API, answers more slowly, and near the length limit gets summarized or stopped. This skill doesn't move or copy a chat. It saves a short, deliberate handoff (decisions, open items, next step, what not to redo) that a fresh chat picks up, or it reviews a side chat's work item by item so a master chat folds in only what the user approves.
 

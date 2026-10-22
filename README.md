@@ -26,7 +26,7 @@ Chains work too: research chats feed a report chat, and the report feeds a fresh
 
 Sources (checked October 22, 2026): Anthropic's help center, [What is the Pro plan?](https://support.claude.com/en/articles/8325606-what-is-the-pro-plan) ("The number of messages you can send will vary based on message length, including the length of files you attach, the length of your current conversation, and the model or feature you use"), [Models, usage, and limits in Claude Code](https://support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code) ("Every previous message is resent on every turn"), [How do usage and length limits work?](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Using the Messages API](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless") and [Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
-**Status:** v0.3.4, in testing.
+**Status:** v0.3.5, in testing.
 
 ## Commands
 
@@ -169,16 +169,16 @@ If you sign in to Claude Code with your claude.ai account and the skill is turne
 
 ## Optional: a nudge
 
-Claude can suggest a handoff on its own at natural stopping points. Add this to **Settings > Instructions for Claude** (or to `CLAUDE.md` in Claude Code):
+Claude can suggest a handoff on its own at natural stopping points. Add this to **Settings > General > Instructions for Claude** (or to `CLAUDE.md` in Claude Code):
 
 > In long chats, at natural stopping points (a deliverable finished, a question settled, a long stretch of file work), suggest typing "handoff" (or ".push", if I use dot-style commands) in one short line at the end of the reply. Don't repeat it if I ignore it.
 
 ## Limits
 
-- Claude can't see the title of the chat it's in. In most apps it can't list, rename or close chats; the exception is the Claude desktop app's Code tab, where Claude can list your other sessions and, when you ask, rename or archive one. The skill suggests a title for each one, and renaming is optional (see Chat titles).
+- Claude can't see the title of the chat it's in. In most apps it can't browse your chat list, rename or close chats (it reaches past chats only through past-chat search); the exception is the Claude desktop app's Code tab, where Claude can list your other sessions and, when you ask, rename or archive one. The skill suggests a title for each one, and renaming is optional (see Chat titles).
 - Claude can't see how full a chat is or how much usage you have left, so `handoff?` (`.push?`) is a judgment call, not a meter.
 - Chats in different claude.ai Projects can't see each other's files. Hand off within a project.
-- Without a Project or folder, `pickup` (`.pull`) depends on past-chat search (it must be on in your claude.ai settings) finding the handoff. If it doesn't, the skill asks you to paste it.
+- Without a Project or folder, `pickup` (`.pull`) depends on past-chat search finding the handoff. Past-chat search is only on paid plans (Pro, Max, Team and Enterprise), is on by default (**Settings > Memory > Search and reference chats**), and skips incognito chats. On the Free plan, or if it can't find the handoff, the skill asks you to paste it.
 
 ## License
 
