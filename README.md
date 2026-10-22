@@ -26,7 +26,7 @@ Chains work too: research chats feed a report chat, and the report feeds a fresh
 
 Sources: Anthropic's help center, [How can I maximize my Claude Pro usage?](https://support.anthropic.com/en/articles/8325614-how-can-i-maximize-my-claude-pro-usage) ("Claude needs to re-read the entire conversation every time you send a message"), [Understanding usage and length limits](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits) and [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) ("Claude summarizes earlier messages to make room for new content"); the Claude API docs, [Working with messages](https://platform.claude.com/docs/en/build-with-claude/working-with-messages) ("The Messages API is stateless").
 
-**Status:** v0.3.3, in testing.
+**Status:** v0.3.4, in testing.
 
 ## Commands
 
@@ -47,7 +47,7 @@ Use plain words or the dot style, whichever you like:
 - A command works as the whole message (or nearly), in any case, so `.Push` from a phone counts and "I'll pick up the kids" doesn't.
 - The dot keeps the git-style words from being mistaken for real git commands: `.push` is a handoff, `push` is not.
 - Once a chat has been handed off or folded in, an ordinary instruction typed into it gets a warning before anything runs (see Stale chat guard). Handoff commands still work there.
-- A different line renames, and the chat keeps its tag: `handoff <new line>` (`.push <new line>`) saves the new file first, then deletes the old one, so nothing is left under the old name. A different tag on the same line (`handoff budget.post` or `.push budget.post` in `budget.pre`) only changes the tag.
+- A different line renames, and the chat keeps its tag: `handoff <new line>` (`.push <new line>`) saves the new file first, then deletes the old one, so nothing is left under the old name. If the new line already has a handoff file from other chats, the skill asks first instead of replacing it. A different tag on the same line (`handoff budget.post` or `.push budget.post` in `budget.pre`) only changes the tag.
 
 ## Chat names
 

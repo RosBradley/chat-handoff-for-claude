@@ -1,7 +1,8 @@
 # Changelog
 
-## 0.3.4 (in testing)
+## 0.3.4 (October 22, 2026)
 
+- `handoff <name>` asks first when that line already has a handoff file this chat never had: a rename onto an existing line, or a new chat naming itself after one. Before, it could replace the other chat's handoff without asking. The choices are the usual ones: Stop (recommended) asks for another name, Add to it adds this chat's work to that line as new items, and Replace it overwrites. A rename that stops or adds keeps this chat's old file.
 - The setup guide, README and worked example show every command in both styles, plain words and dot style, including the terminal routine (`.push`, `/rename pushed.<name>`, `/clear`, `.pull`) and a dot-style version of the worked example's first handoff.
 
 ## 0.3.3 (October 19, 2026)

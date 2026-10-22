@@ -5,7 +5,7 @@ description: "Carries a chat's work into a new chat, or reviews a side chat's wo
 
 # Chat Handoff
 
-Version: 0.3.3
+Version: 0.3.4
 
 Claude re-reads the whole chat with every message, so a long chat uses up the user's limits faster, costs more on the API, answers more slowly, and near the length limit gets summarized or stopped. This skill doesn't move or copy a chat. It saves a short, deliberate handoff (decisions, open items, next step, what not to redo) that a fresh chat picks up, or it reviews a side chat's work item by item so a master chat folds in only what the user approves.
 
@@ -55,7 +55,7 @@ Several chats may run at once, so a chat writes only its own line's file. The on
 **Renaming.** `handoff <name>` with a line other than this chat's is a rename, and no trace of the old name stays behind. A different tag on the same line is not a rename: it only sets or changes this chat's tag. A rename keeps this chat's tag unless the new name gives one (`handoff budget` in `research.pre` makes it `budget.pre`). When the new line is this chat's line with a number or letter run on (`handoff test2` on the `test` line), a tag was probably meant: ask in one line before renaming ("Rename the test line to test2, or tag this chat test.2?").
 
 1. Save the file under the new line, with its `# Handoff:` line changed to match.
-2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first.
+2. Only after that save succeeds, delete the old file (in a Project, `project_delete`; in a folder, remove it). Never delete first. If the new line already had a file and the user chose Stop or Add to it (see "Another chat has the line" under `handoff`), keep the old file.
 3. Say so in the reply: "Renamed from <old> to <new>", with the chat's new title, marked optional.
 
 Rename only this chat's own line. If the old file's status shows another chat already has it (`continuing in`, `folded into` or `merged into`), ask first, since that chat knows it by the old name. Without a file store, an earlier post can't be removed, so the new post's heading adds "(renamed from <old>)".
@@ -130,9 +130,9 @@ Never run the instruction before the user answers, and never let the warning swa
 
 1. Settle the name (see "Names" and "Renaming"). Read the rules file, and the line's current file if one exists.
 
-   **Another chat has the line.** If the file shows another chat has the line now (a `continuing in` status this chat didn't set, or a `From` line that has changed since this chat's own pickup or last handoff), saving would replace that chat's handoff. Ask before drafting anything: one line says which chat has the line and since when ("budget.post picked this line up on October 12; saving here would replace its handoff."), then the choices, as buttons when the chat can show them (the AskUserQuestion tool):
+   **Another chat has the line.** If the file shows another chat has the line now (a `continuing in` status this chat didn't set, a `From` line that has changed since this chat's own pickup or last handoff, or any file at all when this chat never picked the line up or handed it off, such as a rename onto a line that already exists), saving would replace that chat's handoff. Ask before drafting anything: one line says which chat has the line and since when ("budget.post picked this line up on October 12; saving here would replace its handoff."), then the choices, as buttons when the chat can show them (the AskUserQuestion tool):
 
-   1. **Stop** (recommended, first in the list). Save nothing. Reply with the chat that has the line, by its name ("Hand off from budget.post instead").
+   1. **Stop** (recommended, first in the list). Save nothing. Reply with the chat that has the line, by its name ("Hand off from budget.post instead"); if this chat never had the line, ask for another name instead.
    2. **Add to it.** Keep that chat's file as it is, status and `From` line included, and add only this chat's new work, as items under "Ready to fold in" with the next letters, each marked "(from <this chat's name>, <date>)". Step 1's carry-forward keeps them in that chat's next handoff. Say so, and that this chat stays stale.
    3. **Replace it.** Save as usual: this chat takes the line back, with status `waiting`. Say that the other chat is now behind (its guard will warn there), and that anything it hasn't handed off lives only in that chat.
 
