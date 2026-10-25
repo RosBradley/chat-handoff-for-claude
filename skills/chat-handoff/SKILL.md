@@ -5,7 +5,7 @@ description: "Carries a chat's work into a new chat, or reviews a side chat's wo
 
 # Chat Handoff
 
-Version: 0.3.5
+Version: 0.3.6
 
 Claude re-reads the whole chat with every message, so a long chat uses up the user's limits faster, costs more on the API, answers more slowly, and near the length limit gets summarized or stopped. This skill doesn't move or copy a chat. It saves a short, deliberate handoff (decisions, open items, next step, what not to redo) that a fresh chat picks up, or it reviews a side chat's work item by item so a master chat folds in only what the user approves.
 
@@ -195,7 +195,7 @@ One line. **Yes** when the chat is at a stopping point (a deliverable finished, 
 
 For `pickup <name>`, `fold <name>` and their dot forms: match the name's line loosely against handoff file names (without a file store, against past-chat search); one distinctive word is enough, and a tag after the dot only confirms which chat handed off. If two match, ask which. If no handoff file matches but another file clearly holds handed-off work (one written before this skill, for example), use it as the handoff and treat its proposals as the items. If the status says the line is already continuing in another chat, say so and ask before taking it over.
 
-`pickup <name>` always continues and `fold <name>` always folds in; never guess between them.
+`pickup <name>` always continues and `fold <name>` always folds in; never guess between them. Where a case below says to ask which was meant, ask in one line and stop there: read and review nothing until the user answers.
 
 - `pickup <name>` in a chat that already has work of its own: ask in one line which was meant.
 - `fold <name>` as the first message of a new chat: if the rules file says which line that one folds into, this chat is that line (a fresh review chat, for example): say so in the first line and go ahead. Otherwise ask in one line which was meant.

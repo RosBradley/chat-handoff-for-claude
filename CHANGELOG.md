@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.6 (in testing)
+
+- `fold <name>` as the first message of a new chat, with no rules file naming the master, asks which was meant and stops there. It used to review every item in the same reply, which was wasted work if you meant `pickup` (`.pull`). The same goes for `pickup <name>` in a chat that already has work of its own.
+- New test suite in `evals/`: 14 cases for `claude plugin eval`, covering both command styles, naming, renames, a line another chat holds, the stale chat guard, fold-in review, and messages that must not set the skill off. All 14 pass 3 runs out of 3. See Tests in the README.
+
 ## 0.3.5 (October 22, 2026)
 
 Every app-specific claim in the README, the setup guide and the skill's how-to steps was checked against the official docs on October 22, 2026.
