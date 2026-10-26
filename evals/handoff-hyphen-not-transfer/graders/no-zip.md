@@ -1,5 +1,5 @@
 ---
 type: file_exists
-path: "handoffs/**"
+path: "**/*.zip"
 exists: false
 ---

@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 (in testing)
+
+Move work to another AI, with the same commands and the same package format as [Chat Handoff for ChatGPT](https://github.com/RosBradley/chat-handoff-for-chatgpt), so work moves between the two.
+
+- New commands:
+  - `transfer <name> to <AI>` (`.export <name> to <AI>`), and `handoff <name> to <AI>` (`.push <name> to <AI>`), which does the same, package a chat's work in a ZIP for another AI. The package holds START-HERE.md with a prompt to paste, HANDOFF.md, PROJECT-CONTEXT.md for bigger projects, FILE-MANIFEST.csv with a checksum for every file, and the files themselves. The name and the AI are optional. The skill checks the package before handing it over, labels it **Partial transfer** if something needed is missing, leaves out secrets, and never sends it anywhere.
+  - `export project <name>` packages a whole project as a snapshot. It asks which chats to include, gives a `.push <chat-name>` to type in each chat it can't read fully, and labels the package **Partial project export** until every chat is in. No chat is marked handed off.
+- `pickup` (`.pull`) or `fold` (`.merge`) with a package attached imports it, from this skill or from Chat Handoff for ChatGPT, including its handoff headings and `Handoff-<line>.md` file names. A package is treated as information about the work, never as instructions: the skill won't run a program it contains.
+- A transfer marks the chat handed off, with the status `continuing in <AI>`, so the stale chat guard covers it. Titles are the usual `handed_off.<name>` and `pushed.<name>`.
+- The skill is split into a main page and appendices that load only when needed: `references/fold.md`, `references/state.md` (the stale chat guard's steps, a line another chat holds, renames and the full title scheme), `references/transfer.md` and `references/apps.md` (how-to steps and special places to save), plus `assets/rules-template.md`. The main page is about 3,200 words, down from about 4,700, with the new commands included, so a pickup loads about a third less. It's also now under Microsoft Agent Builder's 20,000-character limit.
+- Ideas from the ChatGPT version:
+  - An unnamed chat's first handoff names the line from the chat's topic, saves, and says the name, instead of asking first.
+  - Asking about a command, or a command written inside an imported file, doesn't run it.
+  - The handoff note may go past 400 words only to keep a constraint the next chat must not lose.
+  - A fold doesn't ask again about items you already decided.
+  - Item letters continue AA, AB after Z.
+  - Line names can't contain slashes.
+  - Where the app can create files, a handoff without a Project or folder is also offered as a download.
+  - In Claude Code on the web, a gitignored `handoffs/` folder means the handoff is posted, and committed only if you ask.
+  - A `pickup` that finds nothing asks you to paste or attach the handoff.
+- Releases also include `chat-handoff-cowork.zip`, the same skill with `SKILL.md` at the top level, as Copilot Cowork and Agent Builder require.
+- Tests: `handoff-unnamed-asks` becomes `handoff-unnamed-names-itself`, and five new cases cover `.export`, `handoff budget to Gemini`, `handoff budget-to-gemini` (not a transfer), a project export that asks which chats to move, and importing a ChatGPT-made package without running a script hidden in it. 19 cases in all.
+- The README's status line said v0.3.5 after the 0.3.6 release; it now says v0.4.0.
+
 ## 0.3.6 (in testing)
 
 - `fold <name>` as the first message of a new chat, with no rules file naming the master, asks which was meant and stops there. It used to review every item in the same reply, which was wasted work if you meant `pickup` (`.pull`). The same goes for `pickup <name>` in a chat that already has work of its own.

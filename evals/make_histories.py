@@ -49,13 +49,17 @@ PICKED_UP_RESEARCH = [
 
 CASES = {
     "push-dot-no-git": BUDGET,
-    "handoff-unnamed-asks": BUDGET,
+    "handoff-unnamed-names-itself": BUDGET,
     "handoff-named-saves": BUDGET,
     "handoff-line-held-elsewhere": BUDGET,
     "handoff-spaced-name": MARKET,
     "stale-chat-guard": AFTER_HANDOFF,
     "rename-tag-or-line": PICKED_UP_TEST,
     "rename-to-new-line": PICKED_UP_RESEARCH,
+    "transfer-dot-export": BUDGET,
+    "handoff-to-ai-is-transfer": BUDGET,
+    "handoff-hyphen-not-transfer": BUDGET,
+    "export-project-asks-which-chats": BUDGET,
 }
 
 

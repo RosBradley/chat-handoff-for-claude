@@ -8,7 +8,7 @@
     {
       "name": "chat-handoff",
       "source": "./",
-      "description": "Carry a chat's work into a new chat, or review a side chat's work item by item and fold what you approve into a master chat."
+      "description": "Carry a chat's work into a new chat or to another AI, or review a side chat's work item by item and fold what you approve into a master chat."
     }
   ]
 }
