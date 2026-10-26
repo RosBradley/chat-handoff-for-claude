@@ -102,7 +102,7 @@ In Claude Code, a chat is a session: `/clear` starts a new one, and `/rename` re
    | files/ | The actual files |
 
    It leaves out passwords, keys and other secrets, and labels the package **Partial transfer** if something the next step needs is missing.
-3. Open the other AI, attach the ZIP, and paste the prompt from START-HERE.md. The other AI doesn't need this skill. If it won't take a ZIP, attach the main files or paste the text instead. [docs/setup.md](docs/setup.md#moving-work-to-another-ai) has the steps for Claude, ChatGPT, Gemini, Meta AI, Microsoft Copilot and GitHub Copilot.
+3. Open the other AI, attach the files, and paste the prompt from START-HERE.md. The other AI doesn't need this skill. Gemini and Copilot Cowork take the ZIP itself; most others don't, so the skill also gives you the files unzipped, and its reply says what to attach for the AI you named. [docs/setup.md](docs/setup.md#moving-work-to-another-ai) has the steps for Claude, ChatGPT, Gemini, Meta AI, Microsoft Copilot and GitHub Copilot.
 
 The skill never sends anything anywhere: you carry the package. A transfer marks the chat handed off, so it's guarded like any other handed-off chat.
 
@@ -148,7 +148,7 @@ A chat counts as handed off when `handoff`, `.push`, `transfer` or `.export` ran
 
 Each chat writes only its own line's file (the one exception: a master marking items in a file it folds in), so chats running at the same time can't overwrite each other.
 
-Transfer packages go in `handoffs/` in Claude Code (`handoffs/budget-transfer-2026-10-26.zip`), and are offered as a download in claude.ai. A package you import in Claude Code is unpacked into `handoffs/imports/<line>/`.
+Transfer packages go in `handoffs/` in Claude Code (`handoffs/budget-transfer-2026-10-26.zip`, with the same files unzipped in a folder beside it), and are offered as downloads in claude.ai (the ZIP, plus START-HERE.md and HANDOFF.md on their own). A package you import in Claude Code is unpacked into `handoffs/imports/<line>/`.
 
 ## Project rules (optional)
 

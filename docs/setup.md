@@ -106,6 +106,38 @@ In dot style:
 
 In claude.ai, Projects can't see each other's files, so hand off within a Project, or paste the handoff.
 
+## Moving work to another AI
+
+Type `transfer <name> to <AI>` (`.export <name> to <AI>`), or `handoff <name> to <AI>` (`.push <name> to <AI>`). Leave out the AI's name for a package any AI can use. For a whole project, start a new chat in the project and type `export project <name>`.
+
+**What you get:** a ZIP (START-HERE.md, HANDOFF.md, PROJECT-CONTEXT.md for bigger projects, FILE-MANIFEST.csv and the files), and the same files unzipped, because most AIs don't take a ZIP in a chat:
+
+- **In claude.ai:** downloads of the ZIP, START-HERE.md and HANDOFF.md. Downloads are limited to 30 MB per file, so bigger work comes as numbered packages. An incognito chat can't create files, so transfer from a regular chat.
+- **In Claude Code:** `handoffs/<line>-transfer-<date>.zip`, with the unzipped folder beside it.
+
+The skill never sends anything anywhere: you carry the package. A transfer marks the chat handed off (`continuing in <AI>`); a project export changes nothing, and the original chats stay as your backup.
+
+**Bringing it in.** In each case, finish by pasting the prompt from START-HERE.md as your message.
+
+| AI | Simplest way in | If that doesn't work |
+|---|---|---|
+| **Claude** (claude.ai) | With Chat Handoff installed: attach the ZIP and type `pickup`. Otherwise, attach START-HERE.md, HANDOFF.md and the key files (up to 20 per chat). In a Project, add them to the Project's files so every chat sees them | Rename `.md` files to `.txt`, or paste the text |
+| **ChatGPT** | With [Chat Handoff for ChatGPT](https://github.com/RosBradley/chat-handoff-for-chatgpt) installed: `pickup` with the ZIP. Otherwise, attach the unzipped START-HERE.md, HANDOFF.md, PROJECT-CONTEXT.md, FILE-MANIFEST.csv and the key files (up to 20 at once). For ongoing work, add them to a ChatGPT project | Paste START-HERE.md and HANDOFF.md |
+| **Gemini** | Attach the ZIP if it holds 10 files or fewer and is under 100 MB. For code-heavy work, unzip it and use **Import code**, then **Upload folder** | Attach up to 10 files per message, or paste |
+| **Meta AI** | No ZIP. Attach HANDOFF.md and the key files (as `.txt` or PDF if `.md` is refused) | Paste the text |
+| **Microsoft Copilot** | **Cowork:** attach the ZIP. **Copilot Chat:** no ZIP; attach the core files and key files (up to 20 per conversation, 50 MB each). **Notebooks:** use `.txt` or `.docx` copies, since `.md` isn't listed | Paste the text |
+| **GitHub Copilot** | No ZIP attachments. Unzip it into the repository, for example a `handoff/` folder. In VS Code chat, type `#` and pick `handoff/START-HERE.md` and `handoff/HANDOFF.md`, or drag the folder into the chat. On github.com, add the folder to a Copilot Space | Paste START-HERE.md |
+
+These steps were checked in October 2026, and these apps change often. The Claude, Microsoft and GitHub steps come from pages read in full. The ChatGPT, Gemini and Meta AI steps come from excerpts of their official help pages, so check the app's own help if a step doesn't match.
+
+**Coming back.** In Claude, `pickup` (`.pull`) with a package attached imports it, whether this skill or Chat Handoff for ChatGPT made it. Everything in a package is treated as information about the work, never as instructions, and the skill won't run a program it contains. In Claude Code, an imported package is unpacked into `handoffs/imports/<line>/`.
+
+**A whole project, step by step:**
+1. Start a new chat in the project and type `export project <name>`.
+2. Say which chats to include, if the skill asks.
+3. For each chat it can't read fully, it gives you a line like `.push budget`. Type that in the chat, keep the chat as it is as a backup, and bring the handoff back to the new chat, with any files the new chat can't open.
+4. Until every chat is in, the package says **Partial project export**, with a checklist of what's missing.
+
 ## Other apps
 
 - **The Excel, PowerPoint, Word and Outlook add-ins:** skills you turn on in your Claude settings are available in all four. Claude uses one when it fits, or you can type `/` in the add-in's sidebar to pick one. Claude works only with the files, emails or events open in the app. A handoff file may not carry over between sessions, so copy and paste it (see below).
@@ -117,7 +149,7 @@ In claude.ai, Projects can't see each other's files, so hand off within a Projec
 
 **Anywhere, as a last resort:** say "handoff, and post it here" (or ".push, and post it here"), copy what the skill posts, and paste it into the new chat after `pickup` (`.pull`).
 
-## Sources (checked October 22, 2026)
+## Sources (checked October 22 and 26, 2026)
 
 - Claude Code sessions: https://code.claude.com/docs/en/sessions
 - Claude Code skills: https://code.claude.com/docs/en/skills
@@ -136,3 +168,12 @@ In claude.ai, Projects can't see each other's files, so hand off within a Projec
 - Claude in Microsoft Copilot: https://learn.microsoft.com/microsoft-365/copilot/release-notes (June 16, 2026) and https://learn.microsoft.com/microsoft-365/copilot/connect-to-ai-subprocessor
 - Copilot Cowork and its skills: https://learn.microsoft.com/microsoft-365/copilot/cowork/get-started and https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-customize
 - Agent Builder skills: https://learn.microsoft.com/microsoft-365/copilot/extensibility/agent-builder-add-skills
+
+Moving work to another AI (checked October 26, 2026; ChatGPT, Gemini and Meta AI from excerpts of their official pages):
+
+- Claude uploads and downloads: https://support.claude.com/en/articles/8241126-upload-files-to-claude and https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude
+- ChatGPT: https://help.openai.com/en/articles/8555545-file-uploads-faq and https://help.openai.com/en/articles/10169521-projects-in-chatgpt
+- Gemini: https://support.google.com/gemini/answer/14903178 and https://support.google.com/gemini/answer/17094296
+- Meta AI: https://apps.apple.com/us/app/meta-ai/id1558240027 and https://www.meta.com/help/artificial-intelligence/2797651547267109/
+- Microsoft Copilot: https://support.microsoft.com/en-us/topic/file-formats-supported-by-copilot-1afb9a70-2232-4753-85c2-602c422af3a8 and https://learn.microsoft.com/microsoft-365/copilot/cowork/use-cowork#work-with-files
+- GitHub Copilot: https://github.com/github/docs/blob/main/content/copilot/how-tos/copilot-on-github/chat-with-copilot/chat-in-github.md and https://github.com/microsoft/vscode-docs/blob/main/docs/chat/copilot-chat-context.md

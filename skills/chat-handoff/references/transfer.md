@@ -47,7 +47,11 @@ A ZIP named `<line>-transfer-<YYYY-MM-DD>.zip` (for a project, `<project>-projec
 - For coding work, record the repository URL, branch, commit, whether there are uncommitted changes, what it needs to run and the commands that matter. Include needed uncommitted files or a patch. Never push just to make a transfer, and never imply an unpushed commit is on the remote.
 - A text-only transfer still builds a ZIP: START-HERE.md, HANDOFF.md and the manifest.
 
-**Building it.** In claude.ai, use code execution (Python's `zipfile`) and offer the ZIP as a download. In Claude Code, save it in `handoffs/` and give its path. If a ZIP can't be made, say so, and give START-HERE.md and HANDOFF.md as text plus the list of files to attach by hand; don't call that a full package.
+**Building it.** Many AIs don't accept a ZIP in a chat, so always give the files unzipped too:
+
+- In claude.ai, use code execution (Python's `zipfile`) and offer the ZIP as a download, plus START-HERE.md and HANDOFF.md as separate downloads. Keep the ZIP under 30 MB, the download limit; if the work is bigger, split it into numbered packages, each with its own START-HERE.md. An incognito chat can't create files: say so, and suggest a regular chat.
+- In Claude Code, save the ZIP in `handoffs/` and keep the unzipped folder beside it (`handoffs/<line>-transfer-<YYYY-MM-DD>/`), and give both paths.
+- If a ZIP can't be made, say so, and give START-HERE.md and HANDOFF.md as text plus the list of files to attach by hand; don't call that a full package.
 
 ## The prompt for the receiving AI
 
@@ -74,12 +78,18 @@ Never send the package to another service, and never create a chat or project in
 
 ## Bringing it into another AI
 
-Tell the user, for the destination named (or briefly for the common ones, when none was named):
+Give the steps for the destination named, from this table (checked October 2026; apps change, so say to check the app's help if a step doesn't match). When no AI was named, give the general way: attach START-HERE.md, HANDOFF.md and the files marked required, then paste the prompt from START-HERE.md.
 
-- Attach the ZIP in a new chat there, and paste the prompt from START-HERE.md as the message.
-- If that AI doesn't accept ZIP files, unzip it and attach START-HERE.md, HANDOFF.md and the files marked required instead, or paste START-HERE.md and HANDOFF.md.
-- If that AI has projects or a place to keep files, suggest adding the package's files there, so later chats can see them.
-- If Chat Handoff is installed there (Claude, or ChatGPT with Chat Handoff for ChatGPT), `pickup` with the ZIP attached imports it.
+| Destination | Simplest way in | If that doesn't work |
+|---|---|---|
+| Claude (claude.ai) | With Chat Handoff installed: attach the ZIP and type `pickup`. Otherwise, attach START-HERE.md, HANDOFF.md and the key files (up to 20 per chat), then paste the prompt. In a Project, add them to the Project's files | Rename `.md` files to `.txt`, or paste the text |
+| ChatGPT | With Chat Handoff for ChatGPT installed: `pickup` with the ZIP. Otherwise, attach the unzipped core files and key files (up to 20 at once), then paste the prompt; for ongoing work, add them to a ChatGPT project | Paste START-HERE.md and HANDOFF.md |
+| Gemini | Attach the ZIP if it holds 10 files or fewer and is under 100 MB, then paste the prompt. For code-heavy work, unzip it and use Import code, Upload folder | Attach up to 10 files per message, or paste |
+| Meta AI | No ZIP: attach HANDOFF.md and the key files (as `.txt` or PDF if `.md` is refused), then paste the prompt | Paste the text |
+| Microsoft Copilot | In Cowork: attach the ZIP and paste the prompt. In Copilot Chat, no ZIP: attach the core files and key files (up to 20, 50 MB each), then paste the prompt. For a Notebook, use `.txt` or `.docx` copies | Paste the text |
+| GitHub Copilot | No ZIP attachments: unzip it into the repository (for example a `handoff/` folder), then in VS Code chat type `#` and pick `handoff/START-HERE.md` and `handoff/HANDOFF.md`, or drag the folder in. On github.com, add the folder to a Copilot Space | Paste START-HERE.md |
+
+If that AI has projects or another place to keep files, suggest adding the package's files there, so later chats see them too.
 
 ## Import
 
