@@ -213,6 +213,8 @@ claude plugin eval . --scaffold --allow-tools Write Edit Bash --ablation none
 
 `--scaffold` puts each case's starting files in place, `--allow-tools` lets the skill save files, and `--ablation none` skips the comparison run without the skill. Each case runs 3 times, about $7 for the whole suite. To run one case, add `--case stale-chat-guard`. After changing a case's earlier conversation in `evals/make_histories.py`, run `python3 evals/make_histories.py`.
 
+On Linux, the eval's shell sandbox blocks writes to `/tmp`, where it also puts each case's working folder, so every shell write fails (no ZIP, no file deleted on a rename). Point the temp folder elsewhere first, for example `TMPDIR=~/evaltmp`, and install `bubblewrap` and `socat` if the sandbox reports them missing.
+
 ## Limits
 
 - Claude can't see the title of the chat it's in. In most apps it can't browse your chat list, rename or close chats (it reaches past chats only through past-chat search); the exception is the Claude desktop app's Code tab, where Claude can list your other sessions and, when you ask, rename or archive one. The skill suggests a title for each one, and renaming is optional (see Chat titles).

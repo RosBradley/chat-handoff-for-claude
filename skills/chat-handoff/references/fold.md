@@ -2,6 +2,8 @@
 
 Read for `fold` and `.merge`. A fold that brings in a handoff package from another AI starts with "Import" in `references/transfer.md`, then continues here with the package's HANDOFF.md as the side chat's file.
 
+If `fold <name>` is the first message of a new chat and no rules file names the line it folds into, don't start here: ask in one line which was meant (fold it into this chat as the master, or continue it with `pickup`), and stop.
+
 This chat is the master, and the skill is its reviewer: a second set of eyes on work this chat did not build. The side chat's conclusions are claims to test, not facts. Scrutinize; don't rubber-stamp. The user's part is the decision (step 4).
 
 1. **Read** the handoff and the files it points to. Review only items without a verdict mark; marked items are already settled.

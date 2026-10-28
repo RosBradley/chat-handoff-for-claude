@@ -64,7 +64,7 @@ Saving to another folder the user names, in Claude Code on the web, or in a git 
 
 **Renaming.** `handoff <name>` with a line other than this chat's is a rename: follow "Renaming" in `references/state.md` before saving.
 
-**Chat titles.** Titles are only suggested, and renaming is optional: Claude can't see chat titles and, in most apps, can't rename chats, and commands find handoffs by file name, never by title. Whenever a chat's state changes, suggest the title the steps below give, in the style just typed ("Optional: rename this chat handed_off.budget."), unless the rules file sets its own; the full scheme is under "Chat titles" in `references/state.md`. In the Claude desktop app's Code tab, the user can ask Claude to rename the session; then use the suggested title.
+**Chat titles.** Titles are only suggested, and renaming is optional: Claude can't see chat titles and, in most apps, can't rename chats, and commands find handoffs by file name, never by title. Whenever a chat's state changes, suggest the title the steps below give, in the style just typed ("Optional: rename this chat handed_off.budget."), unless the rules file sets its own. Use only the state words given there; never make up others, such as `handoff_done`. The full scheme is under "Chat titles" in `references/state.md`. In the Claude desktop app's Code tab, the user can ask Claude to rename the session; then use the suggested title.
 
 **Item letters.** Items to fold in are lettered A, B, C. A letter belongs to one item for the life of a line: a reworked item keeps its letter, and new items continue after the highest letter already used (in the items, the "Don't redo" list or the receipt). After Z come AA, AB. Never reuse a letter.
 
@@ -163,11 +163,11 @@ If the user attached a handoff package or pasted a handoff from another AI, foll
 1. Read the handoff and its "Read first" files. Don't read the old chat unless something needed is missing.
 2. If newer versions of the "Built on" files exist, say so.
 3. This chat is named by the line, plus the tag if the user typed one in the pickup command (`pickup budget.post` makes this chat `budget.post`); a tag that matches the file's "From" line names the old chat, not this one, so this chat stays untagged. Set the status to `continuing in <name>, <date>` (`continuing in a new chat, <date>` when this chat has no tag). A "From" line with a trailing number (`budget.3`, from an older version) is just a tag.
-4. Reply in five lines or fewer: what is picked up, anything stale, the optional titles, worded for the user since Claude can't see which chats are renamed ("Optional: title this chat budget.post; if you haven't already, rename the old one handed_off.budget.pre", or `pushed` after `.pull`), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
+4. Reply in five lines or fewer: what is picked up, anything stale, the optional titles, worded for the user since Claude can't see which chats are renamed ("Optional: title this chat budget.post; if you haven't already, rename the old one handed_off.budget.pre"; after `.pull`, the old one is `pushed.budget.pre`, never `handed_off`), and the next step. If the status was `returned`, the next step is the returned items. Then do the next step, unless it needs the user.
 
 ## Fold in: `fold <name>` (`.merge <name>`)
 
-Follow `references/fold.md`. This chat is the master and reviews the side chat's work item by item; nothing is applied until the user decides.
+First apply "Finding a handoff by name" above: when `fold <name>` is the first message of a new chat and no rules file names the line it folds into, ask in one line which was meant and stop; don't open `references/fold.md` or read the handoff yet. Otherwise follow `references/fold.md`. This chat is the master and reviews the side chat's work item by item; nothing is applied until the user decides.
 
 ## `pickup` with no name (`.pull`)
 

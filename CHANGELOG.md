@@ -23,6 +23,7 @@ Move work to another AI, with the same commands and the same package format as [
 - Releases also include `chat-handoff-cowork.zip`, the same skill with `SKILL.md` at the top level, as Copilot Cowork and Agent Builder require.
 - Tests: `handoff-unnamed-asks` becomes `handoff-unnamed-names-itself`, and five new cases cover `.export`, `handoff budget to Gemini`, `handoff budget-to-gemini` (not a transfer), a project export that asks which chats to move, and importing a ChatGPT-made package without running a script hidden in it. 19 cases in all.
 - The README's status line said v0.3.5 after the 0.3.6 release; it now says v0.4.0.
+- Test results, October 28, 2026: 12 of the 19 cases passed 3 runs out of 3 on the first run, and the other 7 pass 3 out of 3 after the fixes below (the full suite hasn't been re-run since). Two of the 7 failed only because of the test machine's sandbox (see Tests in the README). The first run found three things, now fixed: `fold <name>` as a new chat's first message went straight into the review once the fold steps moved to `references/fold.md` (the fold section now asks first, and so does the top of `fold.md`); after `.pull`, the old chat was sometimes titled `handed_off.` instead of `pushed.`; and once a made-up title word (`handoff_done.`) appeared. The skill now names `pushed.` for `.pull` and allows only the listed title words.
 
 ## 0.3.6 (in testing)
 
